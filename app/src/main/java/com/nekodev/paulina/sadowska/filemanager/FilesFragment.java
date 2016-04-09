@@ -2,6 +2,8 @@ package com.nekodev.paulina.sadowska.filemanager;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +18,28 @@ import java.util.Collections;
 public class FilesFragment extends Fragment {
 
     private String path;
+    private RecyclerView mAlarmRecyclerView;
+    private FileListAdapter mAlarmListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.files_fragment, container, false);
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mAlarmRecyclerView = (RecyclerView) view.findViewById(R.id.files_list_recycler_view);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mAlarmRecyclerView.setLayoutManager(mLayoutManager);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         path = "/";
         // Use the current directory as title
@@ -32,9 +51,6 @@ public class FilesFragment extends Fragment {
         // Read all files sorted into the values-array
         ArrayList<String> values = new ArrayList<>();
         File dir = new File(path);
-        if (!dir.canRead()) {
-            getActivity().setTitle(getActivity().getTitle() + " (inaccessible)");
-        }
         String[] list = dir.list();
         if (list != null) {
             for (String file : list) {
@@ -44,31 +60,9 @@ public class FilesFragment extends Fragment {
             }
         }
         Collections.sort(values);
+        FileListAdapter adapter = new FileListAdapter(values, getActivity());
 
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String filename = (String) listView.getAdapter().getItem(position);
-                if (path.endsWith(File.separator)) {
-                    filename = path + filename;
-                } else {
-                    filename = path + File.separator + filename;
-                }
-                if (!new File(filename).canRead()) {
-                    Toast.makeText(getActivity(), filename + " is not accessible", Toast.LENGTH_SHORT).show();
-                }
-                else if (new File(filename).isDirectory()) {
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    intent.putExtra("path", filename);
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(getActivity(), filename + " is not a directory", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
-
-        return v;
+        mAlarmRecyclerView.setAdapter(adapter);
     }
 }
 
