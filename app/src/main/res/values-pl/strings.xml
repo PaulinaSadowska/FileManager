@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="change_language">zmień jezyk</string>
+    <string name="set_language">ustaw język</string>
+    <string name="language_polish">Polski</string>
+    <string name="language_english">Angielski</string>
+    <string name="choose_language">wybierz język</string>
+    <string name="language_set">zmieniono język na polski</string>
+</resources>

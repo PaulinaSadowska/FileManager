@@ -5,4 +5,5 @@
     <string name="language_polish">Polish</string>
     <string name="language_english">English</string>
     <string name="choose_language">choose language</string>
+    <string name="language_set">language set to english</string>
 </resources>
