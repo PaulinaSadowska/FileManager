@@ -4,6 +4,7 @@ package com.nekodev.paulina.sadowska.filemanager;
  * Created by Paulina Sadowska on 09.04.16.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startChooseLanguageActivity() {
-        
+        Intent intent = new Intent(this, ChooseLanguageActivity.class);
+        startActivity(intent);
     }
 }

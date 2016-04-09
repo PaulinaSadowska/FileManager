@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">FileManager</string>
     <string name="change_language">change language</string>
+    <string name="set_language">set language</string>
+    <string name="language_polish">Polish</string>
+    <string name="language_english">English</string>
+    <string name="choose_language">choose language</string>
 </resources>

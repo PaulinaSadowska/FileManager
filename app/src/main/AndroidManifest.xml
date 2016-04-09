@@ -21,6 +21,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ChooseLanguageActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog">
+        </activity>
+
     </application>
 
 </manifest>
