@@ -1,12 +1,17 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -14,12 +19,14 @@ import java.util.ArrayList;
  */
 public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
 
-    private ArrayList<String> mFileList;
+    private ArrayList<File> mFileList;
     private Activity mActivity;
+    private String path;
 
-    public FileListAdapter(ArrayList<String> fileList, Activity activity){
+    public FileListAdapter(ArrayList<File> fileList, Activity activity, String path){
         this.mActivity = activity;
         this.mFileList = fileList;
+        this.path = path;
     }
 
     @Override
@@ -35,9 +42,48 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
         holder.setClickListener(new FileViewHolder.ClickListener() {
             @Override
             public void onClick(View v, int pos, boolean isLongClick) {
-                Toast.makeText(mActivity, mFileList.get(pos), Toast.LENGTH_SHORT).show();
+
+                if (isLongClick)
+                    onLongClick(v, pos);
+                else
+                    onQuickClick(v, pos);
             }
         });
+    }
+
+    private void onQuickClick(View v, int pos) {
+        File file = mFileList.get(pos);
+        String filename = mFileList.get(pos).getName();
+        if (path.endsWith(File.separator)) {
+            filename = path + filename;
+        } else {
+            filename = path + File.separator + filename;
+        }
+        if (!file.canRead()) {
+            Toast.makeText(mActivity, filename + " is not accessible", Toast.LENGTH_SHORT).show();
+        } else if (file.isDirectory()) {
+            Intent intent = new Intent(mActivity, MainActivity.class);
+            intent.putExtra("path", filename);
+            mActivity.startActivity(intent);
+        } else {
+            Intent intent = new Intent();
+            intent.setAction(android.content.Intent.ACTION_VIEW);
+            Uri uri = Uri.parse("file://" + file.getAbsolutePath());
+            String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+            String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            if (type != null) {
+                intent.setDataAndType(uri, type);
+                try {
+                    mActivity.startActivityForResult(intent, 10);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(mActivity, "cannot open " + filename + " file", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void onLongClick(View v, int pos) {
+        Toast.makeText(mActivity, "long cick", Toast.LENGTH_SHORT).show();
     }
 
     @Override

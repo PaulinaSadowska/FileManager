@@ -1,9 +1,11 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +35,12 @@ public class FilesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAlarmRecyclerView = (RecyclerView) view.findViewById(R.id.files_list_recycler_view);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        LayoutManager mLayoutManager;
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            mLayoutManager = new GridLayoutManager(getActivity(), 6);
+        else
+            mLayoutManager = new GridLayoutManager(getActivity(), 4);
+        //LinearLayoutManager(getActivity());
         mAlarmRecyclerView.setLayoutManager(mLayoutManager);
     }
 
@@ -48,19 +55,23 @@ public class FilesFragment extends Fragment {
         }
         getActivity().setTitle(path);
 
-        // Read all files sorted into the values-array
-        ArrayList<String> values = new ArrayList<>();
         File dir = new File(path);
         String[] list = dir.list();
+        ArrayList<File> fileList = new ArrayList<>();
         if (list != null) {
-            for (String file : list) {
-                if (!file.startsWith(".")) {
-                    values.add(file);
+            for (String fileName : list) {
+                if (!fileName.startsWith(".")) {
+                    if (path.endsWith(File.separator)) {
+                        fileName = path + fileName;
+                    } else {
+                        fileName = path + File.separator + fileName;
+                    }
+                    fileList.add(new File(fileName));
                 }
             }
         }
-        Collections.sort(values);
-        FileListAdapter adapter = new FileListAdapter(values, getActivity());
+        Collections.sort(fileList);
+        FileListAdapter adapter = new FileListAdapter(fileList, getActivity(), path);
 
         mAlarmRecyclerView.setAdapter(adapter);
     }
