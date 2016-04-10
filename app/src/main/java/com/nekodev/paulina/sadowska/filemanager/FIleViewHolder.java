@@ -5,8 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
-
 /**
  * Created by Paulina Sadowska on 09.04.16.
  */
@@ -14,6 +12,9 @@ public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     private TextView mFileName;
     private ImageView mFileIcon;
+    private TextView mFileDate;
+    private TextView mFileSize;
+
 
     private ClickListener clickListener;
 
@@ -21,16 +22,23 @@ public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         super(itemView);
         mFileName = (TextView) itemView.findViewById(R.id.file_name);
         mFileIcon = (ImageView) itemView.findViewById(R.id.file_icon);
+        mFileDate = (TextView) itemView.findViewById(R.id.file_date);
+        mFileSize = (TextView) itemView.findViewById(R.id.file_size);
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
     }
 
-    public void bindViewHolder(File file){
+    public void bindViewHolder(FileDataItem file){
         mFileName.setText(file.getName());
-        if(file.isFile())
+
+        if(file.getType()==FileType.FILE)
             mFileIcon.setBackgroundResource(R.drawable.file);
-        else if(file.isDirectory())
+        else if(file.getType()==FileType.DIRECTORY)
             mFileIcon.setBackgroundResource(R.drawable.folder);
+
+
+        mFileDate.setText(file.getLastModified());
+        mFileSize.setText(file.getSize());
     }
 
     /* Interface for handling clicks - both normal and long ones. */

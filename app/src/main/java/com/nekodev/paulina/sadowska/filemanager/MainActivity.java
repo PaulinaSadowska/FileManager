@@ -5,9 +5,11 @@ package com.nekodev.paulina.sadowska.filemanager;
  */
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +29,16 @@ public class MainActivity extends AppCompatActivity {
         FilesFragment filesFragment = new FilesFragment();
         transaction.replace(R.id.files_fragment_container, filesFragment);
         transaction.commit();
+
+        Toolbar actionBarToolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
+        setSupportActionBar(actionBarToolbar);
+        actionBarToolbar.setTitleTextColor(Color.WHITE);
+    /*    actionBarToolbar.setNavigationIcon(R.drawable.file);
+        actionBarToolbar.setNavigationContentDescription(getString(R.string.app_name));
+        actionBarToolbar.setLogo(R.drawable.folder);
+        actionBarToolbar.setLogoDescription(getString(R.string.change_language));*/
+
+
     }
 
     @Override

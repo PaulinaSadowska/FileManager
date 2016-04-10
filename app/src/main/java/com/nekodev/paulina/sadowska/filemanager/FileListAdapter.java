@@ -19,11 +19,11 @@ import java.util.ArrayList;
  */
 public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
 
-    private ArrayList<File> mFileList;
+    private ArrayList<FileDataItem> mFileList;
     private Activity mActivity;
     private String path;
 
-    public FileListAdapter(ArrayList<File> fileList, Activity activity, String path){
+    public FileListAdapter(ArrayList<FileDataItem> fileList, Activity activity, String path){
         this.mActivity = activity;
         this.mFileList = fileList;
         this.path = path;
@@ -52,16 +52,16 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
     }
 
     private void onQuickClick(View v, int pos) {
-        File file = mFileList.get(pos);
+        FileDataItem file = mFileList.get(pos);
         String filename = mFileList.get(pos).getName();
         if (path.endsWith(File.separator)) {
             filename = path + filename;
         } else {
             filename = path + File.separator + filename;
         }
-        if (!file.canRead()) {
+        if (!file.isReadable()) {
             Toast.makeText(mActivity, filename + " is not accessible", Toast.LENGTH_SHORT).show();
-        } else if (file.isDirectory()) {
+        } else if (file.getType()==FileType.DIRECTORY) {
             Intent intent = new Intent(mActivity, MainActivity.class);
             intent.putExtra("path", filename);
             mActivity.startActivity(intent);

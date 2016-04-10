@@ -1,9 +1,8 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.LayoutInflater;
@@ -36,11 +35,7 @@ public class FilesFragment extends Fragment {
 
         mAlarmRecyclerView = (RecyclerView) view.findViewById(R.id.files_list_recycler_view);
         LayoutManager mLayoutManager;
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-            mLayoutManager = new GridLayoutManager(getActivity(), 6);
-        else
-            mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        //LinearLayoutManager(getActivity());
+        mLayoutManager = new LinearLayoutManager(getActivity());
         mAlarmRecyclerView.setLayoutManager(mLayoutManager);
     }
 
@@ -71,7 +66,11 @@ public class FilesFragment extends Fragment {
             }
         }
         Collections.sort(fileList);
-        FileListAdapter adapter = new FileListAdapter(fileList, getActivity(), path);
+        ArrayList<FileDataItem> fileDataList = new ArrayList<>();
+        for(File f : fileList){
+            fileDataList.add(new FileDataItem(f));
+        }
+        FileListAdapter adapter = new FileListAdapter(fileDataList, getActivity(), path);
 
         mAlarmRecyclerView.setAdapter(adapter);
     }
