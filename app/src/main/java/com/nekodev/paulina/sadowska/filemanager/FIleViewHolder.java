@@ -5,25 +5,28 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Paulina Sadowska on 09.04.16.
  */
 public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    private TextView mFileName;
-    private ImageView mFileIcon;
-    private TextView mFileDate;
-    private TextView mFileSize;
+    @Bind(R.id.file_name) TextView mFileName;
+    @Bind(R.id.file_icon) ImageView mFileIcon;
+    @Bind(R.id.file_date) TextView mFileDate;
+    @Bind(R.id.file_size) TextView mFileSize;
+    //@BindString(R.string.choose_language)
+    //    String chooseLanguageMessage;
 
 
     private ClickListener clickListener;
 
     public FileViewHolder(View itemView) {
         super(itemView);
-        mFileName = (TextView) itemView.findViewById(R.id.file_name);
-        mFileIcon = (ImageView) itemView.findViewById(R.id.file_icon);
-        mFileDate = (TextView) itemView.findViewById(R.id.file_date);
-        mFileSize = (TextView) itemView.findViewById(R.id.file_size);
+
+        ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
     }

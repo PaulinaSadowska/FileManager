@@ -43,8 +43,8 @@ public class ChooseLanguageActivity extends AppCompatActivity {
                 String language = languages.get(languageRadioGroup.getCheckedRadioButtonId());
                 changeLanguage(language);
                 Toast.makeText(activity, getString(R.string.language_set), Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
                 finish();
-
             }
         });
     }

@@ -20,6 +20,8 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static final int CHOOSE_LANGUAGE_CODE = 999;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +35,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar actionBarToolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(actionBarToolbar);
         actionBarToolbar.setTitleTextColor(Color.WHITE);
-    /*    actionBarToolbar.setNavigationIcon(R.drawable.file);
-        actionBarToolbar.setNavigationContentDescription(getString(R.string.app_name));
-        actionBarToolbar.setLogo(R.drawable.folder);
-        actionBarToolbar.setLogoDescription(getString(R.string.change_language));*/
-
-
     }
 
     @Override
@@ -62,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void startChooseLanguageActivity() {
         Intent intent = new Intent(this, ChooseLanguageActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, CHOOSE_LANGUAGE_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == CHOOSE_LANGUAGE_CODE) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Intent refresh = new Intent(this, MainActivity.class);
+                startActivity(refresh);
+                finish();
+            }
+        }
     }
 }

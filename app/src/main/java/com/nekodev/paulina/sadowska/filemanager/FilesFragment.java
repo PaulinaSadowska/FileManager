@@ -13,14 +13,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Paulina Sadowska on 09.04.16.
  */
 public class FilesFragment extends Fragment {
 
-    private String path;
-    private RecyclerView mAlarmRecyclerView;
-    private FileListAdapter mAlarmListAdapter;
+    @Bind(R.id.files_list_recycler_view) RecyclerView mAlarmRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class FilesFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAlarmRecyclerView = (RecyclerView) view.findViewById(R.id.files_list_recycler_view);
+        ButterKnife.bind(this, view);
         LayoutManager mLayoutManager;
         mLayoutManager = new LinearLayoutManager(getActivity());
         mAlarmRecyclerView.setLayoutManager(mLayoutManager);
@@ -42,8 +43,7 @@ public class FilesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        path = "/";
+        String path = "/";
         // Use the current directory as title
         if (getActivity().getIntent().hasExtra("path")) {
             path = getActivity().getIntent().getStringExtra("path");
