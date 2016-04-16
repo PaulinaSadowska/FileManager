@@ -2,6 +2,7 @@ package com.nekodev.paulina.sadowska.filemanager;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,10 +14,11 @@ import butterknife.ButterKnife;
  */
 public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    @Bind(R.id.file_name) TextView mFileName;
-    @Bind(R.id.file_icon) ImageView mFileIcon;
-    @Bind(R.id.file_date) TextView mFileDate;
-    @Bind(R.id.file_size) TextView mFileSize;
+    @Bind(R.id.file_name)    TextView mFileName;
+    @Bind(R.id.file_icon)    ImageView mFileIcon;
+    @Bind(R.id.file_date)    TextView mFileDate;
+    @Bind(R.id.file_size)    TextView mFileSize;
+    @Bind(R.id.file_checkbox) CheckBox mFileCheck;
     //@BindString(R.string.choose_language)
     //    String chooseLanguageMessage;
 
@@ -64,4 +66,5 @@ public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         clickListener.onClick(v, getPosition(), true);
         return true;
     }
+
 }

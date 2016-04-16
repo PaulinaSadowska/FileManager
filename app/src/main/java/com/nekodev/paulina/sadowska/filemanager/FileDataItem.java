@@ -16,6 +16,15 @@ public class FileDataItem {
     private String size;
     private boolean readable;
     private String absolutePath;
+    private boolean isChecked = false;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked = isChecked;
+    }
 
     private static final ArrayList<String> sizeUnits;
     static
@@ -90,7 +99,6 @@ public class FileDataItem {
     public boolean isReadable() {
         return readable;
     }
-
 
     public String getAbsolutePath() {
         return absolutePath;

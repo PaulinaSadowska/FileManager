@@ -6,11 +6,18 @@
     android:layout_marginRight="@dimen/margin_horizontal"
     android:layout_marginLeft="@dimen/margin_horizontal">
 
+    <android.support.v7.widget.AppCompatCheckBox
+        android:visibility="gone"
+        android:id="@+id/file_checkbox"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
     <ImageView
         android:id="@+id/file_icon"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center" />
 
     <LinearLayout

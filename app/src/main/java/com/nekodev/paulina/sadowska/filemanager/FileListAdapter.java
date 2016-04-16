@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -22,6 +23,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
     private ArrayList<FileDataItem> mFileList;
     private Activity mActivity;
     private String path;
+    private int checkBoxesVisibility = View.GONE;
 
     public FileListAdapter(ArrayList<FileDataItem> fileList, Activity activity, String path){
         this.mActivity = activity;
@@ -31,7 +33,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
 
     @Override
     public FileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.file_list_item, parent, false);
         return new FileViewHolder(v);
     }
@@ -39,6 +40,14 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
     @Override
     public void onBindViewHolder(FileViewHolder holder, int position) {
         holder.bindViewHolder(mFileList.get(position));
+        holder.mFileCheck.setVisibility(checkBoxesVisibility);
+        holder.mFileCheck.setChecked(mFileList.get(position).isChecked());
+        holder.mFileCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Toast.makeText(mActivity, "Checked but not saved", Toast.LENGTH_SHORT).show();
+            }
+        });
         holder.setClickListener(new FileViewHolder.ClickListener() {
             @Override
             public void onClick(View v, int pos, boolean isLongClick) {
@@ -83,8 +92,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
     }
 
     private void onLongClick(View v, int pos) {
-        Toast.makeText(mActivity, "long cick", Toast.LENGTH_SHORT).show();
+        checkBoxesVisibility = View.VISIBLE;
+        mFileList.get(pos).setIsChecked(true);
+        notifyDataSetChanged();
     }
+
 
     @Override
     public int getItemCount() {
