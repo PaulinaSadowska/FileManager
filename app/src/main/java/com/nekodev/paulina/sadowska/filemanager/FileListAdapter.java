@@ -18,12 +18,13 @@ import java.util.ArrayList;
 /**
  * Created by Paulina Sadowska on 09.04.16.
  */
-public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
+public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
     private ArrayList<FileDataItem> mFileList;
     private Activity mActivity;
     private String path;
     private int checkBoxesVisibility = View.GONE;
+    private CheckCounter checkCounter = new CheckCounter();
 
     public FileListAdapter(ArrayList<FileDataItem> fileList, Activity activity, String path){
         this.mActivity = activity;
@@ -38,14 +39,18 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
     }
 
     @Override
-    public void onBindViewHolder(FileViewHolder holder, int position) {
+    public void onBindViewHolder(FileViewHolder holder, final int position) {
         holder.bindViewHolder(mFileList.get(position));
         holder.mFileCheck.setVisibility(checkBoxesVisibility);
         holder.mFileCheck.setChecked(mFileList.get(position).isChecked());
-        holder.mFileCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.setCheckListener(new FileViewHolder.CheckListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(mActivity, "Checked but not saved", Toast.LENGTH_SHORT).show();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position) {
+                if(checkCounter.updateCheckCount(isChecked, mFileList.get(position).isChecked())){
+                    hideCheckBoxes();
+                }
+                mFileList.get(position).setIsChecked(isChecked);
+
             }
         });
         holder.setClickListener(new FileViewHolder.ClickListener() {
@@ -59,6 +64,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
             }
         });
     }
+
 
     private void onQuickClick(View v, int pos) {
         FileDataItem file = mFileList.get(pos);
@@ -92,8 +98,18 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder>  {
     }
 
     private void onLongClick(View v, int pos) {
+        showCheckBoxes(pos);
+    }
+
+    private void showCheckBoxes(int pos) {
         checkBoxesVisibility = View.VISIBLE;
         mFileList.get(pos).setIsChecked(true);
+        notifyDataSetChanged();
+    }
+
+
+    private void hideCheckBoxes() {
+        checkBoxesVisibility = View.GONE;
         notifyDataSetChanged();
     }
 
