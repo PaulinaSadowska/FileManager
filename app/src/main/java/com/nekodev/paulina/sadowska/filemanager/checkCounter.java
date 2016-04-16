@@ -18,8 +18,4 @@ public class CheckCounter {
         checkCount--;
         return checkCount<1;
     }
-
-    public boolean isCheckCountEmpty(){
-        return checkCount<1;
-    }
 }

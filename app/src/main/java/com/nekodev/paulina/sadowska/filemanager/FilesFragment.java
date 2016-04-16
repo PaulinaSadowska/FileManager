@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 public class FilesFragment extends Fragment {
 
     @Bind(R.id.files_list_recycler_view) RecyclerView mAlarmRecyclerView;
+    private FileDataItemFactory mFileDataFactory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class FilesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.bind(this, view);
+        mFileDataFactory = new FileDataItemFactory(getActivity());
         LayoutManager mLayoutManager;
         mLayoutManager = new LinearLayoutManager(getActivity());
         mAlarmRecyclerView.setLayoutManager(mLayoutManager);
@@ -68,7 +70,7 @@ public class FilesFragment extends Fragment {
         Collections.sort(fileList);
         ArrayList<FileDataItem> fileDataList = new ArrayList<>();
         for(File f : fileList){
-            fileDataList.add(new FileDataItem(f));
+            fileDataList.add(mFileDataFactory.createFileDataItem(f));
         }
         FileListAdapter adapter = new FileListAdapter(fileDataList, getActivity(), path);
 

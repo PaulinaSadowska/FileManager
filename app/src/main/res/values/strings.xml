@@ -6,4 +6,21 @@
     <string name="language_english">English</string>
     <string name="choose_language">choose language</string>
     <string name="language_set">language set to english</string>
+
+    <string name="january">Jan</string>
+    <string name="february">Feb</string>
+    <string name="march">Mar</string>
+    <string name="april">Apr</string>
+    <string name="may">May</string>
+    <string name="june">Jun</string>
+    <string name="july">Jul</string>
+    <string name="august">Aug</string>
+    <string name="september">Sep</string>
+    <string name="october">Oct</string>
+    <string name="november">Nov</string>
+    <string name="december">Dec</string>
+
+    <string name="unknown_date">date unknown</string>
+
+
 </resources>

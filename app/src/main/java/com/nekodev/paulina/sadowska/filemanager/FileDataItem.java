@@ -1,10 +1,5 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 /**
  * Created by Paulina Sadowska on 10.04.16.
  */
@@ -16,7 +11,7 @@ public class FileDataItem {
     private String size;
     private boolean readable;
     private String absolutePath;
-    private boolean isChecked = false;
+    private boolean isChecked;
 
     public boolean isChecked() {
         return isChecked;
@@ -26,58 +21,8 @@ public class FileDataItem {
         this.isChecked = isChecked;
     }
 
-    private static final ArrayList<String> sizeUnits;
-    static
-    {
-        sizeUnits = new ArrayList<>();
-        sizeUnits.add("B");
-        sizeUnits.add("kB");
-        sizeUnits.add("MB");
-        sizeUnits.add("GB");
-    }
-
-    public FileDataItem(File file){
-        name = file.getName();
-
-        if(file.isFile())
-        {
-            type = FileType.FILE;
-            size = fileSizeToString(file.length());
-        }
-        else if(file.isDirectory())
-        {
-            type = FileType.DIRECTORY;
-            if(file.list()!=null)
-                size = directorySizeToString(file.list().length);
-            else if(file.canRead())
-                size = directorySizeToString(0);
-            else
-                size = "?";
-        }
-        else
-            type = FileType.UNKNOWN;
-
-        Date lastModifiedDate = new Date(file.lastModified());
-        lastModified = lastModifiedDate.toString();
-
-        readable = file.canRead();
-        absolutePath = file.getAbsolutePath();
-    }
-
-    private String fileSizeToString(long fileSize){
-
-        int i=0;
-        double tempSize = fileSize;
-        while((tempSize/1024 >= 1) && i<sizeUnits.size()){
-            tempSize/=1024;
-            i++;
-        }
-        return new DecimalFormat("#0.0").format(tempSize) + sizeUnits.get(i);
-    }
-
-    private String directorySizeToString(int numOfFiles){
-
-        return numOfFiles + "";
+    public FileDataItem() {
+        isChecked = false;
     }
 
     public String getName() {
@@ -102,6 +47,30 @@ public class FileDataItem {
 
     public String getAbsolutePath() {
         return absolutePath;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(FileType type) {
+        this.type = type;
+    }
+
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public void setReadable(boolean readable) {
+        this.readable = readable;
+    }
+
+    public void setAbsolutePath(String absolutePath) {
+        this.absolutePath = absolutePath;
     }
 
 }

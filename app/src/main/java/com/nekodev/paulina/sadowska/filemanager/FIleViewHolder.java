@@ -20,8 +20,6 @@ public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     @Bind(R.id.file_date)     TextView mFileDate;
     @Bind(R.id.file_size)     TextView mFileSize;
     @Bind(R.id.file_checkbox) CheckBox mFileCheck;
-    //@BindString(R.string.choose_language)
-    //    String chooseLanguageMessage;
 
 
     private ClickListener clickListener;
@@ -40,9 +38,11 @@ public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         mFileName.setText(file.getName());
 
         if(file.getType()==FileType.FILE)
-            mFileIcon.setBackgroundResource(R.drawable.file);
+            mFileIcon.setImageResource(R.drawable.file);
         else if(file.getType()==FileType.DIRECTORY)
-            mFileIcon.setBackgroundResource(R.drawable.folder);
+            mFileIcon.setImageResource(R.drawable.folder);
+        else
+            mFileIcon.setImageResource(R.drawable.file);
 
 
         mFileDate.setText(file.getLastModified());
