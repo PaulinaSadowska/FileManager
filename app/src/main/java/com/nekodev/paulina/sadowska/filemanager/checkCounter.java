@@ -7,9 +7,7 @@ public class CheckCounter {
 
     private int checkCount = 0;
 
-    public boolean updateCheckCount(boolean isChecked, boolean previousData){
-        if(previousData == isChecked && isChecked && checkCount!=0)
-            return false;
+    public boolean updateCheckCount(boolean isChecked){
 
         if(isChecked){
             checkCount++;

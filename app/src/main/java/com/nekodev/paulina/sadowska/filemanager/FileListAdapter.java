@@ -46,10 +46,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
         holder.setCheckListener(new FileViewHolder.CheckListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position) {
-                if(checkCounter.updateCheckCount(isChecked, mFileList.get(position).isChecked())){
-                    hideCheckBoxes();
-                }
-                mFileList.get(position).setIsChecked(isChecked);
+
 
             }
         });
@@ -61,6 +58,14 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
                     onLongClick(v, pos);
                 else
                     onQuickClick(v, pos);
+            }
+
+            @Override
+            public void onCheckboxClick(View v, int position, boolean isChecked) {
+                if(checkCounter.updateCheckCount(isChecked)){
+                    hideCheckBoxes();
+                }
+                mFileList.get(position).setIsChecked(isChecked);
             }
         });
     }
@@ -98,12 +103,14 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
     }
 
     private void onLongClick(View v, int pos) {
-        showCheckBoxes(pos);
+        if(checkBoxesVisibility==View.GONE)
+            showCheckBoxes(pos);
     }
 
     private void showCheckBoxes(int pos) {
         checkBoxesVisibility = View.VISIBLE;
         mFileList.get(pos).setIsChecked(true);
+        checkCounter.updateCheckCount(true);
         notifyDataSetChanged();
     }
 
