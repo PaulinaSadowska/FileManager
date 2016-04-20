@@ -72,5 +72,4 @@ public class FileDataItem {
     public void setAbsolutePath(String absolutePath) {
         this.absolutePath = absolutePath;
     }
-
 }

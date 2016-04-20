@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Paulina Sadowska on 09.04.16.
@@ -116,5 +118,15 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
     @Override
     public int getItemCount() {
         return mFileList.size();
+    }
+
+    public Map<String, FileType> getCheckedFiles() {
+        Map<String, FileType> checkedFiles = new HashMap<>();
+        for(FileDataItem file: mFileList){
+            if(file.isChecked()){
+                checkedFiles.put(file.getName(), file.getType());
+            }
+        }
+        return checkedFiles;
     }
 }
