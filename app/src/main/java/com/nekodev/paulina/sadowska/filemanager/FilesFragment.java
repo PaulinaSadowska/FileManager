@@ -6,8 +6,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,7 +32,15 @@ public class FilesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.files_fragment, container, false);
+        setHasOptionsMenu(true);
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+       // menu.add(getResources().getString(R.string.menu_delete))
+       //         .setIcon(R.drawable.file);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -75,6 +87,17 @@ public class FilesFragment extends Fragment {
         FileListAdapter adapter = new FileListAdapter(fileDataList, getActivity(), path);
 
         mAlarmRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete:
+                Toast.makeText(getActivity(), "delete", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 

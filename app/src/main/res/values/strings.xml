@@ -20,7 +20,10 @@
     <string name="november">Nov</string>
     <string name="december">Dec</string>
 
-    <string name="unknown_date">date unknown</string>
-
+    <string name="unknown_date">Date unknown</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_copy">Copy</string>
+    <string name="menu_cut">Cut</string>
+    <string name="menu_paste">Paste</string>
 
 </resources>

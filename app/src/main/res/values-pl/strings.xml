@@ -22,4 +22,8 @@
     <string name="december">Gru</string>
 
     <string name="unknown_date">Data nieznana</string>
+    <string name="delete">Usuń</string>
+    <string name="menu_copy">Kopiuj</string>
+    <string name="menu_cut">Wytnij</string>
+    <string name="menu_paste">Wklej</string>
 </resources>

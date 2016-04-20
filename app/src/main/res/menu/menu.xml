@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_language_white_24dp"
         android:title="@string/change_language"
         app:showAsAction="ifRoom"/>
+    <item android:id="@+id/delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/menu_delete"
+        app:showAsAction="ifRoom"/>
+    
 </menu>

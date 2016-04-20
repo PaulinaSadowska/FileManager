@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -43,13 +42,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
         holder.bindViewHolder(mFileList.get(position));
         holder.mFileCheck.setVisibility(checkBoxesVisibility);
         holder.mFileCheck.setChecked(mFileList.get(position).isChecked());
-        holder.setCheckListener(new FileViewHolder.CheckListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position) {
-
-
-            }
-        });
         holder.setClickListener(new FileViewHolder.ClickListener() {
             @Override
             public void onClick(View v, int pos, boolean isLongClick) {
