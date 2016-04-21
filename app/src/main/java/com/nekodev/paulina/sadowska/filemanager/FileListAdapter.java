@@ -124,7 +124,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
         Map<String, FileType> checkedFiles = new HashMap<>();
         for(FileDataItem file: mFileList){
             if(file.isChecked()){
-                checkedFiles.put(file.getName(), file.getType());
+                FileType type = file.getType();
+                if(!file.isReadable())
+                    type = FileType.UNKNOWN;
+
+                checkedFiles.put(file.getName(), type);
             }
         }
         return checkedFiles;
