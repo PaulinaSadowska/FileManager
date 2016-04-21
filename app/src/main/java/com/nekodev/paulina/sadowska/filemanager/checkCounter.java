@@ -16,4 +16,8 @@ public class CheckCounter {
         checkCount--;
         return checkCount<1;
     }
+
+    public int getCheckCount(){
+        return checkCount;
+    }
 }

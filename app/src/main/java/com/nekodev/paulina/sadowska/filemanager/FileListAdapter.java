@@ -128,4 +128,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
         }
         return checkedFiles;
     }
+
+    public int getCheckedItemCount() {
+        return checkCounter.getCheckCount();
+    }
 }

@@ -26,4 +26,6 @@
     <string name="menu_copy">Kopiuj</string>
     <string name="menu_cut">Wytnij</string>
     <string name="menu_paste">Wklej</string>
+    <string name="delete_alert_title">Usuń pliki</string>
+    <string name="delete_alert_body">Czy jesteś pewnien, że chcesz usunąć pliki: </string>
 </resources>

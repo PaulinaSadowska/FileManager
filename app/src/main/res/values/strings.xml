@@ -25,5 +25,7 @@
     <string name="menu_copy">Copy</string>
     <string name="menu_cut">Cut</string>
     <string name="menu_paste">Paste</string>
+    <string name="delete_alert_body">Are you sure you want to delete files: </string>
+    <string name="delete_alert_title">Delete files</string>
 
 </resources>
