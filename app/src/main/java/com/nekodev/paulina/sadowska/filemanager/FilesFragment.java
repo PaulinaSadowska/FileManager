@@ -1,5 +1,6 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -27,8 +27,8 @@ public class FilesFragment extends Fragment {
 
     @Bind(R.id.files_list_recycler_view) RecyclerView mAlarmRecyclerView;
     private FileDataItemFactory mFileDataFactory;
-    FileListAdapter mFileAdapter;
-    String path = "/";
+    private FileListAdapter mFileAdapter;
+    private String path = "/";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class FilesFragment extends Fragment {
         }
         getActivity().setTitle(path);
 
-        ArrayList<File> fileList = getListOfFiles(path);
+        ArrayList<File> fileList = FileUtils.getListOfFiles(path);
 
         Collections.sort(fileList);
         ArrayList<FileDataItem> fileDataList = new ArrayList<>();
@@ -70,28 +70,6 @@ public class FilesFragment extends Fragment {
 
         mFileAdapter = new FileListAdapter(fileDataList, getActivity(), path);
         mAlarmRecyclerView.setAdapter(mFileAdapter);
-    }
-
-    private ArrayList<File> getListOfFiles(String path) {
-        File dir = new File(path);
-        String[] list = dir.list();
-        ArrayList<File> fileList = new ArrayList<>();
-        if (list != null) {
-            for (String fileName : list) {
-                if (!fileName.startsWith(".")) {
-                    fileList.add(new File(getFullFileName(path, fileName)));
-                }
-            }
-        }
-        return fileList;
-    }
-
-    private String getFullFileName(String path, String fileName) {
-        if (path.endsWith(File.separator)) {
-            return (path + fileName);
-        } else {
-            return (path + File.separator + fileName);
-        }
     }
 
     @Override
@@ -108,66 +86,16 @@ public class FilesFragment extends Fragment {
 
     private void deleteCheckedFiles() {
         Map<String, FileType> fileList = mFileAdapter.getCheckedFiles();
-        DeleteFilesThread thread = new DeleteFilesThread(fileList);
+        DeleteFilesThread thread = new DeleteFilesThread(fileList, path);
+        thread.addCompleteListener(new ThreadCompleteListener() {
+            @Override
+            public void notifyOfThreadComplete(Runnable runnable) {
+                Intent refresh = new Intent(getActivity(), MainActivity.class);
+                refresh.putExtra("path", path);
+                getActivity().startActivity(refresh);
+            }
+        });
         thread.run();
-
-    }
-
-    private class DeleteFilesThread implements Runnable{
-
-        private Map<String, FileType> fileList;
-
-        DeleteFilesThread(Map<String, FileType> fileList){
-            this.fileList = fileList;
-        }
-
-        @Override
-        public void run() {
-            Iterator it = fileList.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                deleteWithChildren(getFullFileName(path, (String)pair.getKey()), (FileType)pair.getValue());
-                it.remove(); // avoids a ConcurrentModificationException
-            }
-        }
-
-        private boolean deleteWithChildren(String path, FileType fileType) {
-            if(fileType==FileType.FILE){
-                return deleteFile(path);
-            }
-            if(fileType==FileType.DIRECTORY){
-                return deleteDirectory(path);
-            }
-            return false; //unknown type or cannot read
-        }
-
-        private boolean deleteDirectory(String path) {
-            ArrayList<File> fileList =  getListOfFiles(path);
-            boolean result = true;
-            for(File file: fileList){
-                result = (result && deleteWithChildren(file.getPath(), getFileType(file)));
-            }
-            if(result){
-                File dir = new File(path);
-                result = dir.delete();
-            }
-            return result;
-        }
-
-        private FileType getFileType(File file) {
-            if(!file.canRead())
-                return FileType.UNKNOWN;
-            if(file.isFile())
-                return FileType.FILE;
-            if(file.isDirectory())
-                return FileType.DIRECTORY;
-            return FileType.UNKNOWN;
-        }
-
-        private boolean deleteFile(String fullPath){
-            File file = new File(fullPath);
-            return file.delete();
-        }
     }
 }
 

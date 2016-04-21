@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import java.io.File;
+
 /**
  * Created by Paulina Sadowska on 09.04.16.
  */
@@ -67,10 +69,21 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == CHOOSE_LANGUAGE_CODE) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                Intent refresh = new Intent(this, MainActivity.class);
-                startActivity(refresh);
-                finish();
+                refreshActivity(getIntent().getStringExtra("path"));
             }
         }
+    }
+
+    private void refreshActivity(String path) {
+        Intent refresh = new Intent(this, MainActivity.class);
+        refresh.putExtra("path", path);
+        startActivity(refresh);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        File current = new File(getIntent().getStringExtra("path"));
+        refreshActivity(current.getParent());
     }
 }
