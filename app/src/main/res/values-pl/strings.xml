@@ -36,4 +36,6 @@
 
     <string name="confirm">Zatwierdź</string>
     <string name="no_files_selected">Nie zaznaczono plików</string>
+    <string name="files_copied">Liczba skopiowanych elementów: </string>
+    <string name="files_cutted">Liczba wyciętych elementów: </string>
 </resources>

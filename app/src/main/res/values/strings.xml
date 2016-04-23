@@ -39,5 +39,7 @@
 
     <string name="confirm">Confirm</string>
     <string name="no_files_selected">No files selected</string>
+    <string name="files_copied">Number of copied files: </string>
+    <string name="files_cutted">Number of cut files: </string>
 
 </resources>

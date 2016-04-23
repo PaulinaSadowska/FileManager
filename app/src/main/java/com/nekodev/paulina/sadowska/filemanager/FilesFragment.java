@@ -23,6 +23,7 @@ import com.nekodev.paulina.sadowska.filemanager.data.factories.FileDataItemFacto
 import com.nekodev.paulina.sadowska.filemanager.threads.DeleteFilesThread;
 import com.nekodev.paulina.sadowska.filemanager.threads.ThreadCompleteListener;
 import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
+import com.nekodev.paulina.sadowska.filemanager.utilities.CustomSortMethods;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
 import java.io.File;
@@ -95,13 +96,13 @@ public class FilesFragment extends Fragment {
 
         switch(sortMethod){
             case(Constants.SORTING_METHODS.BY_NAME):
-                fileDataList = FileUtils.sortByName(fileDataList, Constants.SORTING_DIRECTION.ASCENDING);
+                fileDataList = CustomSortMethods.sortByName(fileDataList, Constants.SORTING_DIRECTION.ASCENDING);
                 break;
             case(Constants.SORTING_METHODS.BY_DATE):
-                fileDataList = FileUtils.sortByDate(fileDataList, Constants.SORTING_DIRECTION.DESCENDING);
+                fileDataList = CustomSortMethods.sortByDate(fileDataList, Constants.SORTING_DIRECTION.DESCENDING);
                 break;
             case(Constants.SORTING_METHODS.BY_SIZE):
-                fileDataList = FileUtils.sortBySize(fileDataList, Constants.SORTING_DIRECTION.ASCENDING);
+                fileDataList = CustomSortMethods.sortBySize(fileDataList, Constants.SORTING_DIRECTION.ASCENDING);
                 break;
         }
         return fileDataList;
@@ -111,20 +112,33 @@ public class FilesFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-                deleteCheckedFiles();
+                if(isAnyFileChecked())
+                    createDeleteDialog();
+                return true;
+            case R.id.copy:
+                if(isAnyFileChecked())
+                    copyOrCutFiles(true);
+                mFileAdapter.hideAllCheckBoxes();
+                return true;
+            case R.id.paste:
+                Toast.makeText(getActivity(), "paste", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.cut:
+                if(isAnyFileChecked())
+                    copyOrCutFiles(false);
+                mFileAdapter.hideAllCheckBoxes();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void deleteCheckedFiles() {
-        if(mFileAdapter.getCheckedItemCount()>0) {
-            createDeleteDialog();
-        }
-        else{
+    private boolean isAnyFileChecked() {
+        if(mFileAdapter.getCheckedItemCount()<1) {
             Toast.makeText(getActivity(), getString(R.string.no_files_selected), Toast.LENGTH_SHORT).show();
+            return false;
         }
+        return true;
     }
 
     private void createDeleteDialog() {
@@ -157,6 +171,28 @@ public class FilesFragment extends Fragment {
             }
         });
         thread.run();
+    }
+
+    private void copyOrCutFiles(boolean copy) {
+
+        HashMap<String, FileType> fileList = mFileAdapter.getCheckedFiles();
+        if(copy)
+            Toast.makeText(getActivity(), getString(R.string.files_copied) + fileList.size(), Toast.LENGTH_SHORT).show();
+        else{
+            Toast.makeText(getActivity(), getString(R.string.files_cutted) + fileList.size(), Toast.LENGTH_SHORT).show();
+        }
+
+        SharedPreferences.Editor prefEditor = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE).edit();
+
+        int i=0;
+        for (String fileName : fileList.keySet()) {
+            prefEditor.putString(Constants.SELECTED_FILES.KEY+i, fileName);
+            i++;
+        }
+        prefEditor.putString(Constants.SELECTED_FILES.PATH, path);
+        prefEditor.putBoolean(Constants.SELECTED_FILES.COPY_OR_CUT, copy);
+        prefEditor.putInt(Constants.SELECTED_FILES.COUNT, i);
+        prefEditor.apply();
     }
 
 

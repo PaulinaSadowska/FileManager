@@ -33,4 +33,11 @@ public class Constants {
     public class INTENT_KEYS {
         public static final String PATH = "path";
     }
+
+    public class SELECTED_FILES {
+        public static final String KEY = "selected_fIle";
+        public static final String PATH = "selected_files_path";
+        public static final String COUNT = "num_of_files";
+        public static final String COPY_OR_CUT = "copy_or_cut"; //true - copy, false - cut
+    }
 }

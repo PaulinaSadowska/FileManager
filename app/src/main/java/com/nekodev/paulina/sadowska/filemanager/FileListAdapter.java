@@ -138,4 +138,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
     public int getCheckedItemCount() {
         return checkCounter.getCheckCount();
     }
+
+    public void hideAllCheckBoxes() {
+        for (FileDataItem fileDataItem : mFileList) {
+            fileDataItem.setIsChecked(false);
+        }
+        hideCheckBoxes();
+    }
 }

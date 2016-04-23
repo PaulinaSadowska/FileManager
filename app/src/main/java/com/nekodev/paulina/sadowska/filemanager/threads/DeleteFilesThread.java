@@ -18,7 +18,7 @@ public class DeleteFilesThread implements Runnable{
     private String basePath;
     private ThreadCompleteListener listener;
 
-    DeleteFilesThread(Map<String, FileType> fileList, String basePath){
+    public DeleteFilesThread(Map<String, FileType> fileList, String basePath){
         this.fileList = fileList;
         this.basePath = basePath;
     }
