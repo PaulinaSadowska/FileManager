@@ -1,4 +1,4 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.activities;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.nekodev.paulina.sadowska.filemanager.R;
 
 import java.util.HashMap;
 import java.util.Locale;

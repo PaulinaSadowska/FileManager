@@ -1,9 +1,11 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.nekodev.paulina.sadowska.filemanager.R;
 
 import butterknife.Bind;
 

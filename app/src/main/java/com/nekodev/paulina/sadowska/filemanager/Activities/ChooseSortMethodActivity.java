@@ -1,4 +1,4 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+
+import com.nekodev.paulina.sadowska.filemanager.R;
+import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 
 import java.util.HashMap;
 import java.util.Map;

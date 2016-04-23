@@ -1,4 +1,4 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.utilities;
 
 /**
  * Created by Paulina Sadowska on 16.04.16.

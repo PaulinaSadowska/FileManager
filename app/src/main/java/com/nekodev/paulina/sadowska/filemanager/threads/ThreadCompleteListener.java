@@ -1,4 +1,4 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.threads;
 
 /**
  * Created by Paulina Sadowska on 21.04.16.

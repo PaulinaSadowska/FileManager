@@ -11,6 +11,12 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import com.nekodev.paulina.sadowska.filemanager.activities.MainActivity;
+import com.nekodev.paulina.sadowska.filemanager.data.FileDataItem;
+import com.nekodev.paulina.sadowska.filemanager.data.FileType;
+import com.nekodev.paulina.sadowska.filemanager.utilities.CheckCounter;
+import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -69,7 +75,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
         filename = FileUtils.getFullFileName(path, filename);
         if (!file.isReadable()) {
             Toast.makeText(mActivity, filename + " is not accessible", Toast.LENGTH_SHORT).show();
-        } else if (file.getType()==FileType.DIRECTORY) {
+        } else if (file.getType()== FileType.DIRECTORY) {
             Intent intent = new Intent(mActivity, MainActivity.class);
             intent.putExtra("path", filename);
             mActivity.startActivity(intent);

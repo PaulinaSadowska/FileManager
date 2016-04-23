@@ -16,6 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.nekodev.paulina.sadowska.filemanager.activities.MainActivity;
+import com.nekodev.paulina.sadowska.filemanager.data.FileDataItem;
+import com.nekodev.paulina.sadowska.filemanager.data.FileType;
+import com.nekodev.paulina.sadowska.filemanager.data.factories.FileDataItemFactory;
+import com.nekodev.paulina.sadowska.filemanager.threads.DeleteFilesThread;
+import com.nekodev.paulina.sadowska.filemanager.threads.ThreadCompleteListener;
+import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
+import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,11 +68,11 @@ public class FilesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // Use the current directory as title
-        if (getActivity().getIntent().hasExtra("path")) {
-            path = getActivity().getIntent().getStringExtra("path");
+        if (getActivity().getIntent().hasExtra(Constants.INTENT_KEYS.PATH)) {
+            path = getActivity().getIntent().getStringExtra(Constants.INTENT_KEYS.PATH);
         }
         else{
-            getActivity().getIntent().putExtra("path", path);
+            getActivity().getIntent().putExtra(Constants.INTENT_KEYS.PATH, path);
         }
         getActivity().setTitle(path);
 
@@ -143,7 +152,7 @@ public class FilesFragment extends Fragment {
             @Override
             public void notifyOfThreadComplete(Runnable runnable) {
                 Intent refresh = new Intent(getActivity(), MainActivity.class);
-                refresh.putExtra("path", path);
+                refresh.putExtra(Constants.INTENT_KEYS.PATH, path);
                 getActivity().startActivity(refresh);
             }
         });

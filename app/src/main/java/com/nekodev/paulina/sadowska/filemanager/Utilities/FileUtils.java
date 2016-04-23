@@ -1,4 +1,7 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.utilities;
+
+import com.nekodev.paulina.sadowska.filemanager.data.FileDataItem;
+import com.nekodev.paulina.sadowska.filemanager.data.FileType;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,7 +1,10 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.data.factories;
 
 import android.app.Activity;
 import android.util.Log;
+
+import com.nekodev.paulina.sadowska.filemanager.R;
+import com.nekodev.paulina.sadowska.filemanager.data.CustomDate;
 
 import java.text.NumberFormat;
 import java.util.Calendar;

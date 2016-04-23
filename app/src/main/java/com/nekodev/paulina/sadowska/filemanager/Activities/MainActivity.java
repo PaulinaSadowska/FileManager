@@ -1,4 +1,4 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.activities;
 
 /**
  * Created by Paulina Sadowska on 09.04.16.
@@ -13,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.nekodev.paulina.sadowska.filemanager.FilesFragment;
+import com.nekodev.paulina.sadowska.filemanager.R;
 
 import java.io.File;
 

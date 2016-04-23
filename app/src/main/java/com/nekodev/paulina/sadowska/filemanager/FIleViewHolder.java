@@ -6,6 +6,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nekodev.paulina.sadowska.filemanager.data.FileDataItem;
+import com.nekodev.paulina.sadowska.filemanager.data.FileType;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -35,7 +38,7 @@ public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     public void bindViewHolder(FileDataItem file){
         mFileName.setText(file.getName());
 
-        if(file.getType()==FileType.FILE)
+        if(file.getType()== FileType.FILE)
             mFileIcon.setImageResource(R.drawable.file);
         else if(file.getType()==FileType.DIRECTORY)
             mFileIcon.setImageResource(R.drawable.folder);

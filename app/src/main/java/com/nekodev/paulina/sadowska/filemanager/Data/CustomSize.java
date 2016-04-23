@@ -1,4 +1,6 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.data;
+
+import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 
 import java.text.DecimalFormat;
 

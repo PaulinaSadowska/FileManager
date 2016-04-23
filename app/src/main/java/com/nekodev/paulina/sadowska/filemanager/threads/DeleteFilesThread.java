@@ -1,4 +1,8 @@
-package com.nekodev.paulina.sadowska.filemanager;
+package com.nekodev.paulina.sadowska.filemanager.threads;
+
+import com.nekodev.paulina.sadowska.filemanager.data.FileType;
+import com.nekodev.paulina.sadowska.filemanager.threads.ThreadCompleteListener;
+import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
