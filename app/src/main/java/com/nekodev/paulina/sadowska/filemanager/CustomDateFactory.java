@@ -1,6 +1,7 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
 import android.app.Activity;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -14,7 +15,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Paulina Sadowska on 16.04.16.
  */
-public class CustomDateFormat {
+public class CustomDateFactory {
 
     @BindString(R.string.january) String january;
     @BindString(R.string.february) String february;
@@ -32,37 +33,48 @@ public class CustomDateFormat {
 
 
     private Map<Integer, String> months;
+    Calendar date;
 
-    private Calendar date;
-    public CustomDateFormat(Date date, Activity activity){
+
+    public CustomDateFactory(Date date, Activity activity){
         this.date = new GregorianCalendar();
         this.date.setTime(date);
+
         ButterKnife.bind(this, activity);
         initMonthMap();
+
+        int month = this.date.get(Calendar.MONTH);
+        if(month<0 || month>11){
+            Log.e("UNKNOWN", date.toString());
+        }
     }
 
     private void initMonthMap() {
         months = new HashMap<>();
-        months.put(1, january);
-        months.put(2, february);
-        months.put(3, march);
-        months.put(4, april);
-        months.put(5, may);
-        months.put(6, june);
-        months.put(7, july);
-        months.put(8, august);
-        months.put(9, september);
-        months.put(10, october);
-        months.put(11, november);
-        months.put(12, december);
+        months.put(0, january);
+        months.put(1, february);
+        months.put(2, march);
+        months.put(3, april);
+        months.put(4, may);
+        months.put(5, june);
+        months.put(6, july);
+        months.put(7, august);
+        months.put(8, september);
+        months.put(9, october);
+        months.put(10, november);
+        months.put(11, december);
     }
 
-    public String toString() {
+    private String _toString() {
         int month = date.get(Calendar.MONTH);
-        if(month>0 && month<13)
+        if(month>=0 && month<12)
             return date.get(Calendar.DAY_OF_MONTH) + " " + months.get(month)+ " " + date.get(Calendar.YEAR) +
                     " " + date.get(Calendar.HOUR) + ":" + date.get(Calendar.MINUTE);
         else
             return dateUnknown;
+    }
+
+    public CustomDate build(){
+       return new CustomDate(date, this._toString());
     }
 }

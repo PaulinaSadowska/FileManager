@@ -1,5 +1,7 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
+import java.util.Calendar;
+
 /**
  * Created by Paulina Sadowska on 10.04.16.
  */
@@ -7,7 +9,7 @@ public class FileDataItem {
 
     private String name;
     private FileType type;
-    private String lastModified;
+    private CustomDate lastModified;
     private String size;
     private boolean readable;
     private String absolutePath;
@@ -33,8 +35,12 @@ public class FileDataItem {
         return type;
     }
 
-    public String getLastModified() {
-        return lastModified;
+    public String getLastModifiedString() {
+        return lastModified.toString();
+    }
+
+    public Calendar getLastModified() {
+        return lastModified.getDate();
     }
 
     public String getSize() {
@@ -57,7 +63,7 @@ public class FileDataItem {
         this.type = type;
     }
 
-    public void setLastModified(String lastModified) {
+    public void setLastModified(CustomDate lastModified) {
         this.lastModified = lastModified;
     }
 

@@ -53,8 +53,8 @@ public class FileDataItemFactory {
             fileItem.setSize("?");
         }
 
-        CustomDateFormat lastModifiedDate = new CustomDateFormat(new Date(file.lastModified()), mActivity);
-        fileItem.setLastModified(lastModifiedDate.toString());
+        CustomDateFactory lastModifiedDate = new CustomDateFactory(new Date(file.lastModified()), mActivity);
+        fileItem.setLastModified(lastModifiedDate.build());
         fileItem.setReadable(file.canRead());
         fileItem.setAbsolutePath(file.getAbsolutePath());
         return fileItem;

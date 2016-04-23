@@ -56,7 +56,7 @@ public class FileUtils {
         Collections.sort(fileDataList, new Comparator<FileDataItem>() {
             @Override
             public int compare(final FileDataItem file1, final FileDataItem file2) {
-                return file1.getLastModified().compareTo(file2.getLastModified());
+                return (file1.getLastModified().compareTo(file2.getLastModified()))*(-1);
             }
         });
         return fileDataList;
