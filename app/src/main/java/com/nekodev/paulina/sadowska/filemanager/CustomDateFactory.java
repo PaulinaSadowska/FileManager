@@ -3,6 +3,7 @@ package com.nekodev.paulina.sadowska.filemanager;
 import android.app.Activity;
 import android.util.Log;
 
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -17,26 +18,39 @@ import butterknife.ButterKnife;
  */
 public class CustomDateFactory {
 
-    @BindString(R.string.january) String january;
-    @BindString(R.string.february) String february;
-    @BindString(R.string.march) String march;
-    @BindString(R.string.april) String april;
-    @BindString(R.string.may) String may;
-    @BindString(R.string.june) String june;
-    @BindString(R.string.july) String july;
-    @BindString(R.string.august) String august;
-    @BindString(R.string.september) String september;
-    @BindString(R.string.october) String october;
-    @BindString(R.string.november) String november;
-    @BindString(R.string.december) String december;
-    @BindString(R.string.unknown_date) String dateUnknown;
+    @BindString(R.string.january)
+    String january;
+    @BindString(R.string.february)
+    String february;
+    @BindString(R.string.march)
+    String march;
+    @BindString(R.string.april)
+    String april;
+    @BindString(R.string.may)
+    String may;
+    @BindString(R.string.june)
+    String june;
+    @BindString(R.string.july)
+    String july;
+    @BindString(R.string.august)
+    String august;
+    @BindString(R.string.september)
+    String september;
+    @BindString(R.string.october)
+    String october;
+    @BindString(R.string.november)
+    String november;
+    @BindString(R.string.december)
+    String december;
+    @BindString(R.string.unknown_date)
+    String dateUnknown;
 
 
     private Map<Integer, String> months;
     Calendar date;
 
 
-    public CustomDateFactory(Date date, Activity activity){
+    public CustomDateFactory(Date date, Activity activity) {
         this.date = new GregorianCalendar();
         this.date.setTime(date);
 
@@ -44,7 +58,7 @@ public class CustomDateFactory {
         initMonthMap();
 
         int month = this.date.get(Calendar.MONTH);
-        if(month<0 || month>11){
+        if (month < 0 || month > 11) {
             Log.e("UNKNOWN", date.toString());
         }
     }
@@ -67,14 +81,16 @@ public class CustomDateFactory {
 
     private String _toString() {
         int month = date.get(Calendar.MONTH);
-        if(month>=0 && month<12)
-            return date.get(Calendar.DAY_OF_MONTH) + " " + months.get(month)+ " " + date.get(Calendar.YEAR) +
-                    " " + date.get(Calendar.HOUR) + ":" + date.get(Calendar.MINUTE);
-        else
+        NumberFormat nf = NumberFormat.getInstance();
+        if (month >= 0 && month < 12) {
+            String time = String.format("%02d:%02d", date.get(Calendar.HOUR), date.get(Calendar.MINUTE));
+            return date.get(Calendar.DAY_OF_MONTH) + " " + months.get(month) + " " + date.get(Calendar.YEAR) +
+                    " " + time;
+        } else
             return dateUnknown;
     }
 
-    public CustomDate build(){
-       return new CustomDate(date, this._toString());
+    public CustomDate build() {
+        return new CustomDate(date, this._toString());
     }
 }
