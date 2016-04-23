@@ -84,15 +84,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshActivity(String path) {
+        finish();
         Intent refresh = new Intent(this, MainActivity.class);
+        refresh.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         refresh.putExtra("path", path);
         startActivity(refresh);
-        finish();
     }
 
     @Override
     public void onBackPressed() {
         File current = new File(getIntent().getStringExtra("path"));
-        refreshActivity(current.getParent());
+        if(current.getName().length()>1)
+            refreshActivity(current.getParent());
+        else
+            finish();
     }
 }

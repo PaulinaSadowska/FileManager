@@ -3,8 +3,6 @@ package com.nekodev.paulina.sadowska.filemanager;
 import android.app.Activity;
 
 import java.io.File;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -18,16 +16,6 @@ public class FileDataItemFactory {
         this.mActivity = mActivity;
     }
 
-    private static final ArrayList<String> sizeUnits;
-    static
-    {
-        sizeUnits = new ArrayList<>();
-        sizeUnits.add("B");
-        sizeUnits.add("kB");
-        sizeUnits.add("MB");
-        sizeUnits.add("GB");
-    }
-
     public FileDataItem createFileDataItem(File file){
 
         FileDataItem fileItem = new FileDataItem();
@@ -36,21 +24,21 @@ public class FileDataItemFactory {
         if(file.isFile())
         {
             fileItem.setType(FileType.FILE);
-            fileItem.setSize(fileSizeToString(file.length()));
+            fileItem.setSize(new CustomSize(file.length(), false));
         }
         else if(file.isDirectory())
         {
-            String size= "?";
+            long size= -1;
             fileItem.setType(FileType.DIRECTORY);
             if(file.list()!=null)
-                size = directorySizeToString(file.list().length);
+                size = file.list().length;
             else if(file.canRead())
-                size = directorySizeToString(0);
-            fileItem.setSize(size);
+                size = 0;
+            fileItem.setSize(new CustomSize(size, true));
         }
         else{
             fileItem.setType(FileType.UNKNOWN);
-            fileItem.setSize("?");
+            fileItem.setSize(new CustomSize());
         }
 
         CustomDateFactory lastModifiedDate = new CustomDateFactory(new Date(file.lastModified()), mActivity);
@@ -58,21 +46,5 @@ public class FileDataItemFactory {
         fileItem.setReadable(file.canRead());
         fileItem.setAbsolutePath(file.getAbsolutePath());
         return fileItem;
-    }
-
-    private String fileSizeToString(long fileSize){
-
-        int i=0;
-        double tempSize = fileSize;
-        while((tempSize/1024 >= 1) && i<sizeUnits.size()){
-            tempSize/=1024;
-            i++;
-        }
-        return new DecimalFormat("#0.0").format(tempSize) + sizeUnits.get(i);
-    }
-
-    private String directorySizeToString(int numOfFiles){
-
-        return numOfFiles + "";
     }
 }

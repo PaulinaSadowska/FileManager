@@ -43,7 +43,7 @@ public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             mFileIcon.setImageResource(R.drawable.unknown);
 
         mFileDate.setText(file.getLastModifiedString());
-        mFileSize.setText(file.getSize());
+        mFileSize.setText(file.getSizeString());
     }
 
 

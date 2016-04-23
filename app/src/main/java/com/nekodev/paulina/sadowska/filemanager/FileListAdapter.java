@@ -83,6 +83,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
             if (type != null) {
                 intent.setDataAndType(uri, type);
                 try {
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     mActivity.startActivityForResult(intent, 10);
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(mActivity, "cannot open " + filename + " file", Toast.LENGTH_SHORT).show();

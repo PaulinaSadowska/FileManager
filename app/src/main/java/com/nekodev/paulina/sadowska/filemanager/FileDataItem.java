@@ -10,7 +10,7 @@ public class FileDataItem {
     private String name;
     private FileType type;
     private CustomDate lastModified;
-    private String size;
+    private CustomSize size;
     private boolean readable;
     private String absolutePath;
     private boolean isChecked;
@@ -43,7 +43,11 @@ public class FileDataItem {
         return lastModified.getDate();
     }
 
-    public String getSize() {
+    public String getSizeString() {
+        return size.toString();
+    }
+
+    public CustomSize getSize() {
         return size;
     }
 
@@ -67,7 +71,7 @@ public class FileDataItem {
         this.lastModified = lastModified;
     }
 
-    public void setSize(String size) {
+    public void setSize(CustomSize size) {
         this.size = size;
     }
 

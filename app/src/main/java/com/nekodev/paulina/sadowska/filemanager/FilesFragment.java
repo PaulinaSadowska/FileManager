@@ -86,13 +86,13 @@ public class FilesFragment extends Fragment {
 
         switch(sortMethod){
             case(Constants.SORTING_METHODS.BY_NAME):
-                fileDataList = FileUtils.sortByName(fileDataList);
+                fileDataList = FileUtils.sortByName(fileDataList, Constants.SORTING_DIRECTION.ASCENDING);
                 break;
             case(Constants.SORTING_METHODS.BY_DATE):
-                fileDataList = FileUtils.sortByDate(fileDataList);
+                fileDataList = FileUtils.sortByDate(fileDataList, Constants.SORTING_DIRECTION.DESCENDING);
                 break;
             case(Constants.SORTING_METHODS.BY_SIZE):
-                fileDataList = FileUtils.sortBySize(fileDataList);
+                fileDataList = FileUtils.sortBySize(fileDataList, Constants.SORTING_DIRECTION.ASCENDING);
                 break;
         }
         return fileDataList;
