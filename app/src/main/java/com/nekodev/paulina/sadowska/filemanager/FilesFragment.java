@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -114,7 +114,7 @@ public class FilesFragment extends Fragment {
             createDeleteDialog();
         }
         else{
-            Toast.makeText(getActivity(), "No files selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.no_files_selected), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -137,7 +137,7 @@ public class FilesFragment extends Fragment {
     }
 
     private void deleteFiles() {
-        Map<String, FileType> fileList = mFileAdapter.getCheckedFiles();
+        HashMap<String, FileType> fileList = mFileAdapter.getCheckedFiles();
         DeleteFilesThread thread = new DeleteFilesThread(fileList, path);
         thread.addCompleteListener(new ThreadCompleteListener() {
             @Override

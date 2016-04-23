@@ -35,4 +35,5 @@
     <string name="sorting_method_by_size">Rozmiarze</string>
 
     <string name="confirm">Zatwierdź</string>
+    <string name="no_files_selected">Nie zaznaczono plików</string>
 </resources>

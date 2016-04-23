@@ -38,5 +38,6 @@
     <string name="sorting_method_by_size">Size</string>
 
     <string name="confirm">Confirm</string>
+    <string name="no_files_selected">No files selected</string>
 
 </resources>
