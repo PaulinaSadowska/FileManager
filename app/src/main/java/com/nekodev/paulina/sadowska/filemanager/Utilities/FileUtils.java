@@ -34,6 +34,14 @@ public class FileUtils {
         return FileType.UNKNOWN;
     }
 
+    public static FileType getFileType(String type) {
+        if(type.equals(FileType.FILE.toString()))
+            return FileType.FILE;
+        if(type.equals(FileType.DIRECTORY.toString()))
+            return FileType.DIRECTORY;
+        return FileType.UNKNOWN;
+    }
+
     public static String getFullFileName(String path, String fileName) {
         if (path.endsWith(File.separator)) {
             return (path + fileName);

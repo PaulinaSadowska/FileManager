@@ -39,5 +39,6 @@ public class Constants {
         public static final String PATH = "selected_files_path";
         public static final String COUNT = "num_of_files";
         public static final String COPY_OR_CUT = "copy_or_cut"; //true - copy, false - cut
+        public static final String TYPE = "selected_file_type";
     }
 }

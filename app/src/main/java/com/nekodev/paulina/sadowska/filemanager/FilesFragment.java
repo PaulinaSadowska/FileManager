@@ -121,6 +121,7 @@ public class FilesFragment extends Fragment {
                 mFileAdapter.hideAllCheckBoxes();
                 return true;
             case R.id.paste:
+                getCopiedFilesList();
                 Toast.makeText(getActivity(), "paste", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.cut:
@@ -187,12 +188,33 @@ public class FilesFragment extends Fragment {
         int i=0;
         for (String fileName : fileList.keySet()) {
             prefEditor.putString(Constants.SELECTED_FILES.KEY+i, fileName);
+            prefEditor.putString(Constants.SELECTED_FILES.TYPE+i, fileList.get(fileName).toString());
             i++;
         }
         prefEditor.putString(Constants.SELECTED_FILES.PATH, path);
         prefEditor.putBoolean(Constants.SELECTED_FILES.COPY_OR_CUT, copy);
         prefEditor.putInt(Constants.SELECTED_FILES.COUNT, i);
         prefEditor.apply();
+    }
+
+    private void getCopiedFilesList() {
+
+        HashMap<String, FileType> fileList = new HashMap<>();
+
+        Context context = getActivity();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        boolean copy = sharedPref.getBoolean(Constants.SELECTED_FILES.COPY_OR_CUT, false);
+        int count = sharedPref.getInt(Constants.SELECTED_FILES.COUNT, 0);
+        String basePath = sharedPref.getString(Constants.SELECTED_FILES.PATH, "");
+
+        for (int i = 0; i < count; i++) {
+            String fileName = sharedPref.getString(Constants.SELECTED_FILES.KEY+i, "");
+            String fileType = sharedPref.getString(Constants.SELECTED_FILES.TYPE+i, "");
+            fileList.put(fileName, FileUtils.getFileType(fileType));
+        }
+        Toast.makeText(getActivity(), "wklejono pliki: "+ count, Toast.LENGTH_SHORT).show();
     }
 
 
