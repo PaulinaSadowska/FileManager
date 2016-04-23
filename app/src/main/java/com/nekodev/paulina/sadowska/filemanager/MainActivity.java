@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final int CHOOSE_LANGUAGE_CODE = 999;
+    private static final int CHOOSE_SORTING_METHOD_CODE = 900;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.choose_language:
                 startChooseLanguageActivity();
                 return true;
+            case R.id.choose_sorting_method:
+                startChooseSortingMethodActivity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -63,10 +67,15 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, CHOOSE_LANGUAGE_CODE);
     }
 
+    private void startChooseSortingMethodActivity() {
+        Intent intent = new Intent(this, ChooseSortMethodActivity.class);
+        startActivityForResult(intent, CHOOSE_SORTING_METHOD_CODE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == CHOOSE_LANGUAGE_CODE) {
+        if (requestCode == CHOOSE_LANGUAGE_CODE || requestCode == CHOOSE_SORTING_METHOD_CODE) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 refreshActivity(getIntent().getStringExtra("path"));

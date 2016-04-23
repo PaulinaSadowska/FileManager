@@ -1,4 +1,8 @@
 <resources>
+
+    <string name="preference_file_key" translatable="false">preference_key</string>
+
+
     <string name="app_name">FileManager</string>
     <string name="change_language">change language</string>
     <string name="set_language">set language</string>
@@ -27,5 +31,12 @@
     <string name="menu_paste">Paste</string>
     <string name="delete_alert_body">Are you sure you want to delete files: </string>
     <string name="delete_alert_title">Delete files</string>
+
+    <string name="sorting_method_header">Sort by: </string>
+    <string name="sorting_method_by_name">Name</string>
+    <string name="sorting_method_by_date">Date</string>
+    <string name="sorting_method_by_size">Size</string>
+
+    <string name="confirm">Confirm</string>
 
 </resources>

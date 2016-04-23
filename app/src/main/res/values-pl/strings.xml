@@ -28,4 +28,11 @@
     <string name="menu_paste">Wklej</string>
     <string name="delete_alert_title">Usuń pliki</string>
     <string name="delete_alert_body">Czy jesteś pewnien, że chcesz usunąć pliki: </string>
+
+    <string name="sorting_method_header">Sortuj po: </string>
+    <string name="sorting_method_by_name">Nazwie</string>
+    <string name="sorting_method_by_date">Dacie</string>
+    <string name="sorting_method_by_size">Rozmiarze</string>
+
+    <string name="confirm">Zatwierdź</string>
 </resources>

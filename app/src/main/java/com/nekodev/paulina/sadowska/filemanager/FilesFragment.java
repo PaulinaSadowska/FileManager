@@ -1,8 +1,10 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +18,6 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -61,18 +62,40 @@ public class FilesFragment extends Fragment {
         if (getActivity().getIntent().hasExtra("path")) {
             path = getActivity().getIntent().getStringExtra("path");
         }
+        else{
+            getActivity().getIntent().putExtra("path", path);
+        }
         getActivity().setTitle(path);
 
-        ArrayList<File> fileList = FileUtils.getListOfFiles(path);
+        mFileAdapter = new FileListAdapter(getSortedFileDataList(), getActivity(), path);
+        mAlarmRecyclerView.setAdapter(mFileAdapter);
+    }
 
-        Collections.sort(fileList);
+    private ArrayList<FileDataItem> getSortedFileDataList() {
+
+        ArrayList<File> fileList = FileUtils.getListOfFiles(path);
         ArrayList<FileDataItem> fileDataList = new ArrayList<>();
         for (File f : fileList) {
             fileDataList.add(mFileDataFactory.createFileDataItem(f));
         }
 
-        mFileAdapter = new FileListAdapter(fileDataList, getActivity(), path);
-        mAlarmRecyclerView.setAdapter(mFileAdapter);
+        Context context = getActivity();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        int sortMethod = sharedPref.getInt(Constants.SORT_BY_KEY, Constants.SORTING_METHODS.BY_NAME);
+
+        switch(sortMethod){
+            case(Constants.SORTING_METHODS.BY_NAME):
+                fileDataList = FileUtils.sortByName(fileDataList);
+                break;
+            case(Constants.SORTING_METHODS.BY_DATE):
+                fileDataList = FileUtils.sortByDate(fileDataList);
+                break;
+            case(Constants.SORTING_METHODS.BY_SIZE):
+                fileDataList = FileUtils.sortBySize(fileDataList);
+                break;
+        }
+        return fileDataList;
     }
 
     @Override

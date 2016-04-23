@@ -7,6 +7,12 @@
         android:icon="@drawable/ic_language_white_24dp"
         android:title="@string/change_language"
         app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/choose_sorting_method"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="@string/sorting_method_header"
+        app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/delete"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/menu_delete"
