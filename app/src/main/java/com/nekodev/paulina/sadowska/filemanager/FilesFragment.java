@@ -157,7 +157,7 @@ public class FilesFragment extends Fragment {
                         // do nothing
                     }
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_black_24dp)
                 .show();
     }
 

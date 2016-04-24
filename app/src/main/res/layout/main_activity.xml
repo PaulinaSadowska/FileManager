@@ -10,14 +10,6 @@
         android:layout_height="@dimen/toolbar_default_height"
         android:elevation="6dp"
         android:background="@color/colorPrimary">
-
-       <!-- <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginEnd="@dimen/margin_horizontal"
-            android:src="@drawable/ic_language_white_24dp"/>-->
-
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout

@@ -21,8 +21,10 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="DialogTheme" parent="@style/Theme.AppCompat.Light.Dialog">
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
     </style>
-
 
 </resources>

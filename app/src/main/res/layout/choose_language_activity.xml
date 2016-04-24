@@ -17,6 +17,7 @@
 
             <RadioButton
                 android:id="@+id/choose_language_polish"
+                android:checked="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"

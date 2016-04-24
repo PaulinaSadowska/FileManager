@@ -10,7 +10,7 @@
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/choose_sorting_method"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@drawable/ic_sort_white_24dp"
         android:title="@string/sorting_method_header"
         app:showAsAction="ifRoom"/>
 
