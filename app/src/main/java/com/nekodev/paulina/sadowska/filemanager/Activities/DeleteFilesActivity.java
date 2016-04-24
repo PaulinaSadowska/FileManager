@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class DeleteFilesActivity extends AppCompatActivity {
     ProgressBar mProgressBar;
     @Bind(R.id.loading_progress_cancel_button)
     Button mCancelButton;
+    boolean interrupt = false;
 
     private HashMap<String, FileType> fileList;
     private String basePath;
@@ -62,6 +64,12 @@ public class DeleteFilesActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.error_deleting_files), Toast.LENGTH_SHORT).show();
             finish();
         }
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                interrupt = true;
+            }
+        });
     }
 
     private boolean isPossible() {
@@ -80,7 +88,7 @@ public class DeleteFilesActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... urls) {
             Iterator it = fileList.entrySet().iterator();
             int i = 0;
-            while (it.hasNext()) {
+            while (it.hasNext() && !interrupt) {
                 Map.Entry pair = (Map.Entry) it.next();
                 deleteWithChildren(FileUtils.getFullFileName(basePath, (String) pair.getKey()), (FileType) pair.getValue());
                 publishProgress(++i);
