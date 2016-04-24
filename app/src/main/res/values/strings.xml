@@ -8,8 +8,8 @@
     <string name="set_language">set language</string>
     <string name="language_polish">Polish</string>
     <string name="language_english">English</string>
-    <string name="choose_language">choose language</string>
-    <string name="language_set">language set to english</string>
+    <string name="choose_language">Choose language</string>
+    <string name="language_set">Language set to english</string>
 
     <string name="january">Jan</string>
     <string name="february">Feb</string>

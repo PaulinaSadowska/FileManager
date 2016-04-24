@@ -9,7 +9,6 @@
     </style>
 
 
-
     <style name="fileNameStyle">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
@@ -20,6 +19,9 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">@color/colorSecondaryText</item>
         <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="DialogTheme" parent="@style/Theme.AppCompat.Light.Dialog">
     </style>
 
 

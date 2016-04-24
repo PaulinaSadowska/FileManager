@@ -23,22 +23,22 @@
 
         <activity
             android:name=".activities.ChooseLanguageActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
+            android:theme="@style/DialogTheme">
         </activity>
 
         <activity
             android:name=".activities.ChooseSortMethodActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
+            android:theme="@style/DialogTheme">
         </activity>
 
         <activity
             android:name=".activities.PasteFilesActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
+            android:theme="@style/DialogTheme">
         </activity>
 
         <activity
             android:name=".activities.DeleteFilesActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
+            android:theme="@style/DialogTheme">
         </activity>
 
     </application>

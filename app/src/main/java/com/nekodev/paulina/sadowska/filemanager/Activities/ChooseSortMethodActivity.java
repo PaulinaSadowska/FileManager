@@ -64,10 +64,10 @@ public class ChooseSortMethodActivity extends AppCompatActivity{
         sortingDirections.add(getString(R.string.sorting_direction_descending));
 
         mSortingMethodsSpinner.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, sortingMethods));
+                R.layout.spinner_item, sortingMethods));
 
         mSortingDirectionsSpinner.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, sortingDirections));
+                R.layout.spinner_item, sortingDirections));
 
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);

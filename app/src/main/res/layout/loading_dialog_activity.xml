@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="250dp"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:tool="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="@dimen/margin_vertical"
-    android:layout_marginLeft="@dimen/margin_horizontal"
-    android:layout_marginRight="@dimen/margin_horizontal"
+    android:layout_marginLeft="22dp"
+    android:layout_marginRight="22dp"
     android:layout_marginTop="@dimen/margin_vertical"
     android:orientation="vertical">
 
@@ -14,8 +13,11 @@
         android:id="@+id/loading_progress_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="16sp"
         tools:text="Deleted files: 3"
         android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
         />
 
     <ProgressBar
@@ -23,14 +25,14 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progress="100"
         android:layout_gravity="center_horizontal" />
 
     <Button
         android:id="@+id/loading_progress_cancel_button"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="right|end"
         android:text="@string/cancel"
         tools:text="ANULUJ"/>
 
