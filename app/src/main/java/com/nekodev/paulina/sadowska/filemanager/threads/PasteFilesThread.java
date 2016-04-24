@@ -14,7 +14,7 @@ public class PasteFilesThread implements Runnable{
     private Map<String, FileType> fileList;
     private String basePath;
     private String destinationPath;
-    private ThreadCompleteListener listener;
+    private ThreadListener listener;
 
     public PasteFilesThread(Map<String, FileType> fileList, String basePath, String destinationPath){
         this.fileList = fileList;
@@ -22,7 +22,7 @@ public class PasteFilesThread implements Runnable{
         this.destinationPath = destinationPath;
     }
 
-    public void addCompleteListener(ThreadCompleteListener listener){
+    public void addCompleteListener(ThreadListener listener){
         this.listener = listener;
     }
 

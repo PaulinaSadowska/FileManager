@@ -38,4 +38,12 @@
     <string name="no_files_selected">Nie zaznaczono plików</string>
     <string name="files_copied">Liczba skopiowanych elementów: </string>
     <string name="files_cutted">Liczba wyciętych elementów: </string>
+
+    <string name="copy_dialog_title">Kopiowanie plików</string>
+    <string name="cut_dialog_title">Przenoszenie plików</string>
+
+    <string name="copy_dialog_message">Skopiowano plików</string>
+    <string name="cut_dialog_message">Przeniesiono plików</string>
+    <string name="cancel">ANULUJ</string>
+
 </resources>

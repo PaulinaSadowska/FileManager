@@ -41,5 +41,10 @@
     <string name="no_files_selected">No files selected</string>
     <string name="files_copied">Number of copied files: </string>
     <string name="files_cutted">Number of cut files: </string>
+    <string name="copy_dialog_title">Copying files</string>
+    <string name="cut_dialog_title">Moving files</string>
+    <string name="copy_dialog_message">Copied files</string>
+    <string name="cut_dialog_message">Moved files</string>
+    <string name="cancel">CANCEL</string>
 
 </resources>

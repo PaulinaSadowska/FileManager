@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.nekodev.paulina.sadowska.filemanager.FilesFragment;
 import com.nekodev.paulina.sadowska.filemanager.R;
+import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 
 import java.io.File;
 
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == CHOOSE_LANGUAGE_CODE || requestCode == CHOOSE_SORTING_METHOD_CODE) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                refreshActivity(getIntent().getStringExtra("path"));
+                refreshActivity(getIntent().getStringExtra(Constants.INTENT_KEYS.PATH));
             }
         }
     }
@@ -90,13 +91,13 @@ public class MainActivity extends AppCompatActivity {
         finish();
         Intent refresh = new Intent(this, MainActivity.class);
         refresh.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        refresh.putExtra("path", path);
+        refresh.putExtra(Constants.INTENT_KEYS.PATH, path);
         startActivity(refresh);
     }
 
     @Override
     public void onBackPressed() {
-        File current = new File(getIntent().getStringExtra("path"));
+        File current = new File(getIntent().getStringExtra(Constants.INTENT_KEYS.PATH));
         if(current.getName().length()>1)
             refreshActivity(current.getParent());
         else

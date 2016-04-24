@@ -1,7 +1,6 @@
 package com.nekodev.paulina.sadowska.filemanager.threads;
 
 import com.nekodev.paulina.sadowska.filemanager.data.FileType;
-import com.nekodev.paulina.sadowska.filemanager.threads.ThreadCompleteListener;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
 import java.io.File;
@@ -16,14 +15,14 @@ public class DeleteFilesThread implements Runnable{
 
     private Map<String, FileType> fileList;
     private String basePath;
-    private ThreadCompleteListener listener;
+    private ThreadListener listener;
 
     public DeleteFilesThread(Map<String, FileType> fileList, String basePath){
         this.fileList = fileList;
         this.basePath = basePath;
     }
 
-    public void addCompleteListener(ThreadCompleteListener listener){
+    public void addCompleteListener(ThreadListener listener){
         this.listener = listener;
     }
 

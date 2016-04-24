@@ -16,12 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.nekodev.paulina.sadowska.filemanager.activities.PasteFilesActivity;
 import com.nekodev.paulina.sadowska.filemanager.activities.MainActivity;
 import com.nekodev.paulina.sadowska.filemanager.data.FileDataItem;
 import com.nekodev.paulina.sadowska.filemanager.data.FileType;
 import com.nekodev.paulina.sadowska.filemanager.data.factories.FileDataItemFactory;
 import com.nekodev.paulina.sadowska.filemanager.threads.DeleteFilesThread;
-import com.nekodev.paulina.sadowska.filemanager.threads.ThreadCompleteListener;
+import com.nekodev.paulina.sadowska.filemanager.threads.ThreadListener;
 import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 import com.nekodev.paulina.sadowska.filemanager.utilities.CustomSortMethods;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
@@ -121,8 +122,9 @@ public class FilesFragment extends Fragment {
                 mFileAdapter.hideAllCheckBoxes();
                 return true;
             case R.id.paste:
-                getCopiedFilesList();
-                Toast.makeText(getActivity(), "paste", Toast.LENGTH_SHORT).show();
+                Intent paste = new Intent(getActivity(), PasteFilesActivity.class);
+                paste.putExtra(Constants.INTENT_KEYS.PATH, path);
+                startActivity(paste);
                 return true;
             case R.id.cut:
                 if(isAnyFileChecked())
@@ -163,12 +165,17 @@ public class FilesFragment extends Fragment {
     private void deleteFiles() {
         HashMap<String, FileType> fileList = mFileAdapter.getCheckedFiles();
         DeleteFilesThread thread = new DeleteFilesThread(fileList, path);
-        thread.addCompleteListener(new ThreadCompleteListener() {
+        thread.addCompleteListener(new ThreadListener() {
             @Override
             public void notifyOfThreadComplete(Runnable runnable) {
                 Intent refresh = new Intent(getActivity(), MainActivity.class);
                 refresh.putExtra(Constants.INTENT_KEYS.PATH, path);
                 getActivity().startActivity(refresh);
+            }
+
+            @Override
+            public void notifyProgressChanged(int progress) {
+
             }
         });
         thread.run();
@@ -196,27 +203,6 @@ public class FilesFragment extends Fragment {
         prefEditor.putInt(Constants.SELECTED_FILES.COUNT, i);
         prefEditor.apply();
     }
-
-    private void getCopiedFilesList() {
-
-        HashMap<String, FileType> fileList = new HashMap<>();
-
-        Context context = getActivity();
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
-        boolean copy = sharedPref.getBoolean(Constants.SELECTED_FILES.COPY_OR_CUT, false);
-        int count = sharedPref.getInt(Constants.SELECTED_FILES.COUNT, 0);
-        String basePath = sharedPref.getString(Constants.SELECTED_FILES.PATH, "");
-
-        for (int i = 0; i < count; i++) {
-            String fileName = sharedPref.getString(Constants.SELECTED_FILES.KEY+i, "");
-            String fileType = sharedPref.getString(Constants.SELECTED_FILES.TYPE+i, "");
-            fileList.put(fileName, FileUtils.getFileType(fileType));
-        }
-        Toast.makeText(getActivity(), "wklejono pliki: "+ count, Toast.LENGTH_SHORT).show();
-    }
-
 
 }
 
