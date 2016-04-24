@@ -165,7 +165,7 @@ public class FilesFragment extends Fragment {
     private void deleteFiles() {
         HashMap<String, FileType> fileList = mFileAdapter.getCheckedFiles();
         DeleteFilesThread thread = new DeleteFilesThread(fileList, path);
-        thread.addCompleteListener(new ThreadListener() {
+        thread.addThreadListener(new ThreadListener() {
             @Override
             public void notifyOfThreadComplete(Runnable runnable) {
                 Intent refresh = new Intent(getActivity(), MainActivity.class);

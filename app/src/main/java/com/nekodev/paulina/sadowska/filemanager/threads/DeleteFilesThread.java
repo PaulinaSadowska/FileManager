@@ -22,7 +22,7 @@ public class DeleteFilesThread implements Runnable{
         this.basePath = basePath;
     }
 
-    public void addCompleteListener(ThreadListener listener){
+    public void addThreadListener(ThreadListener listener){
         this.listener = listener;
     }
 
