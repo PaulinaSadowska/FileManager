@@ -1,6 +1,8 @@
 package com.nekodev.paulina.sadowska.filemanager.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -80,18 +82,33 @@ public class DeleteFilesActivity extends AppCompatActivity {
         return getString(R.string.delete_dialog_message) + " "+i+"/"+count;
     }
 
-    private class DeleteFilesTask extends AsyncTask<Void, Integer, Boolean> {
+    private class DeleteFilesTask extends AsyncTask<Void, String, Boolean> {
         /**
          * The system calls this to perform work in a worker thread and
          * delivers it the parameters given to AsyncTask.execute()
          */
+        private final Object lock = new Object();
+
         protected Boolean doInBackground(Void... urls) {
             Iterator it = fileList.entrySet().iterator();
             int i = 0;
             while (it.hasNext() && !interrupt) {
                 Map.Entry pair = (Map.Entry) it.next();
-                deleteWithChildren(FileUtils.getFullFileName(basePath, (String) pair.getKey()), (FileType) pair.getValue());
-                publishProgress(++i);
+                String fileName = (String) pair.getKey();
+                if(deleteWithChildren(FileUtils.getFullFileName(basePath, fileName), (FileType) pair.getValue())){
+                    i++;
+                    publishProgress(i+"");
+                }
+                else{
+                    publishProgress(i+"", fileName);
+                    synchronized(lock){
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -103,10 +120,27 @@ public class DeleteFilesActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
+        protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            mProgressMessage.setText(getProgressMessage(values[0]));
-            mProgressBar.setProgress((values[0] * 100) / count);
+            if(values[1]==null){
+                int progress = Integer.parseInt(values[0]);
+                mProgressMessage.setText(getProgressMessage(progress));
+                mProgressBar.setProgress((progress * 100) / count);
+            }
+            else {
+                new AlertDialog.Builder(mActivity)
+                        .setTitle(getResources().getString(R.string.delete_alert_title))
+                        .setMessage(getResources().getString(R.string.error_deleting_files) + " " + values[1])
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                synchronized(lock) {
+                                    lock.notify();
+                                }
+                            }
+                        })
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .show();
+            }
         }
 
         /**
