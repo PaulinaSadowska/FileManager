@@ -36,6 +36,11 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog">
         </activity>
 
+        <activity
+            android:name=".activities.DeleteFilesActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog">
+        </activity>
+
     </application>
 
 </manifest>

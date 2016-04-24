@@ -1,9 +1,7 @@
 package com.nekodev.paulina.sadowska.filemanager.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +13,10 @@ import android.widget.Toast;
 import com.nekodev.paulina.sadowska.filemanager.R;
 import com.nekodev.paulina.sadowska.filemanager.data.FileType;
 import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
-import com.nekodev.paulina.sadowska.filemanager.utilities.FilePasteUtils;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -28,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Paulina Sadowska on 23.04.16.
  */
-public class PasteFilesActivity extends AppCompatActivity {
+public class DeleteFilesActivity extends AppCompatActivity {
 
     @Bind(R.id.loading_progress_message)
     TextView mProgressMessage;
@@ -38,10 +37,8 @@ public class PasteFilesActivity extends AppCompatActivity {
     Button mCancelButton;
 
     private HashMap<String, FileType> fileList;
-    private boolean copy;
-    private int count;
     private String basePath;
-    private String destinationPath;
+    private int count;
     private Activity mActivity;
 
     @Override
@@ -50,60 +47,32 @@ public class PasteFilesActivity extends AppCompatActivity {
         setContentView(R.layout.loading_dialog_activity);
         ButterKnife.bind(this);
 
-        destinationPath = getIntent().getExtras().getString(Constants.INTENT_KEYS.PATH);
+        basePath = getIntent().getExtras().getString(Constants.INTENT_KEYS.PATH);
+        fileList = (HashMap<String, FileType>) getIntent().getExtras().get(Constants.INTENT_KEYS.FILES_TO_DELETE);
+        count = fileList != null ? fileList.keySet().size() : 0;
 
-        getCopiedFilesList();
-        setDialogTitle();
+        setTitle(getString(R.string.delete_dialog_title));
         mProgressBar.setProgress(0);
         mProgressMessage.setText(getProgressMessage(0));
         mActivity = this;
         if(isPossible()) {
-            new CopyFilesTask().execute();
+            new DeleteFilesTask().execute();
         }
         else{
-            Toast.makeText(this, getString(R.string.error_paste_inside_base_subfolder), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_deleting_files), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
     private boolean isPossible() {
-        return !(destinationPath.startsWith(basePath + "/") && !copy);
+        return count>0;
     }
 
     private String getProgressMessage(int i) {
-        if(copy)
-            return getString(R.string.copy_dialog_message) + " "+i+"/"+count;
-
-        return getString(R.string.cut_dialog_message) + " "+i+"/"+count;
-
+        return getString(R.string.delete_dialog_message) + " "+i+"/"+count;
     }
 
-    private void setDialogTitle() {
-        if(copy)
-            setTitle(getString(R.string.copy_dialog_title));
-        else
-            setTitle(getString(R.string.cut_dialog_title));
-    }
-
-    private void getCopiedFilesList() {
-
-        fileList = new HashMap<>();
-
-        SharedPreferences sharedPref = getSharedPreferences(
-                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
-        copy = sharedPref.getBoolean(Constants.SELECTED_FILES.COPY_OR_CUT, false);
-        count = sharedPref.getInt(Constants.SELECTED_FILES.COUNT, 0);
-        basePath = sharedPref.getString(Constants.SELECTED_FILES.PATH, "");
-
-        for (int i = 0; i < count; i++) {
-            String fileName = sharedPref.getString(Constants.SELECTED_FILES.KEY+i, "");
-            String fileType = sharedPref.getString(Constants.SELECTED_FILES.TYPE+i, "");
-            fileList.put(fileName, FileUtils.getFileType(fileType));
-        }
-    }
-
-    private class CopyFilesTask extends AsyncTask<Void, Integer, Boolean> {
+    private class DeleteFilesTask extends AsyncTask<Void, Integer, Boolean> {
         /**
          * The system calls this to perform work in a worker thread and
          * delivers it the parameters given to AsyncTask.execute()
@@ -113,7 +82,7 @@ public class PasteFilesActivity extends AppCompatActivity {
             int i = 0;
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry) it.next();
-                FilePasteUtils.pasteWithChildren(basePath, destinationPath, (String) pair.getKey(), (FileType) pair.getValue(), copy);
+                deleteWithChildren(FileUtils.getFullFileName(basePath, (String) pair.getKey()), (FileType) pair.getValue());
                 publishProgress(++i);
                 try {
                     Thread.sleep(500);
@@ -141,10 +110,38 @@ public class PasteFilesActivity extends AppCompatActivity {
             mProgressBar.setProgress(100);
 
             Intent refresh = new Intent(mActivity, MainActivity.class);
-            refresh.putExtra(Constants.INTENT_KEYS.PATH, destinationPath);
+            refresh.putExtra(Constants.INTENT_KEYS.PATH, basePath);
             mActivity.startActivity(refresh);
             finish();
 
+        }
+
+        private boolean deleteWithChildren(String path, FileType fileType) {
+            if(fileType==FileType.FILE){
+                return deleteFile(path);
+            }
+            if(fileType==FileType.DIRECTORY){
+                return deleteDirectory(path);
+            }
+            return false; //unknown type or cannot read
+        }
+
+        private boolean deleteDirectory(String path) {
+            ArrayList<File> fileList =  FileUtils.getListOfFiles(path);
+            boolean result = true;
+            for(File file: fileList){
+                result = (result && deleteWithChildren(file.getPath(), FileUtils.getFileType(file)));
+            }
+            if(result){
+                File dir = new File(path);
+                result = dir.delete();
+            }
+            return result;
+        }
+
+        private boolean deleteFile(String fullPath){
+            File file = new File(fullPath);
+            return file.delete();
         }
     }
 

@@ -32,6 +32,7 @@ public class Constants {
 
     public class INTENT_KEYS {
         public static final String PATH = "path";
+        public static final String FILES_TO_DELETE = "files_to_delete";
     }
 
     public class SELECTED_FILES {

@@ -47,5 +47,10 @@
     <string name="cut_dialog_message">Moved files</string>
     <string name="cancel">CANCEL</string>
     <string name="error_paste_inside_base_subfolder">You can’t paste an item into itself</string>
+    <string name="delete_dialog_title">Deleting files</string>
+    <string name="delete_dialog_message">Files deleted:</string>
+    <string name="completed">Completed</string>
+
+    <string name="error_deleting_files">Cannot delete files</string>
 
 </resources>
