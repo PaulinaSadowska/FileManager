@@ -52,5 +52,7 @@
     <string name="completed">Completed</string>
 
     <string name="error_deleting_files">Cannot delete files</string>
+    <string name="sorting_direction_ascending">Ascending</string>
+    <string name="sorting_direction_descending">Descending</string>
 
 </resources>

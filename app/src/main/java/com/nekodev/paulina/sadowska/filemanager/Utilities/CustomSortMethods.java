@@ -15,7 +15,7 @@ public class CustomSortMethods {
         Collections.sort(fileDataList, new Comparator<FileDataItem>() {
             @Override
             public int compare(final FileDataItem file1, final FileDataItem file2) {
-                return file1.getName().compareTo(file2.getName()) * AscOrDesc;
+                return file1.getName().compareTo(file2.getName()) * getDirection(AscOrDesc);
             }
         });
         return fileDataList;
@@ -25,7 +25,7 @@ public class CustomSortMethods {
         Collections.sort(fileDataList, new Comparator<FileDataItem>() {
             @Override
             public int compare(final FileDataItem file1, final FileDataItem file2) {
-                return (file1.getLastModified().compareTo(file2.getLastModified()))*AscOrDesc;
+                return (file1.getLastModified().compareTo(file2.getLastModified()))* getDirection(AscOrDesc);
             }
         });
         return fileDataList;
@@ -35,10 +35,16 @@ public class CustomSortMethods {
         Collections.sort(fileDataList, new Comparator<FileDataItem>() {
             @Override
             public int compare(final FileDataItem file1, final FileDataItem file2) {
-                return (file1.getSize().compareTo(file2.getSize()))*AscOrDesc;
+                return (file1.getSize().compareTo(file2.getSize()))* getDirection(AscOrDesc);
             }
         });
         return fileDataList;
+    }
+
+    private static int getDirection(int ascOrDesc){
+        if(ascOrDesc==Constants.SORTING_DIRECTION.DESCENDING)
+            return  -1;
+        return 1;
     }
 
 }

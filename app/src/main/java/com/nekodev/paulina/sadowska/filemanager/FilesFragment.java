@@ -92,16 +92,17 @@ public class FilesFragment extends Fragment {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         int sortMethod = sharedPref.getInt(Constants.SORT_BY_KEY, Constants.SORTING_METHODS.BY_NAME);
+        int sortDirection = sharedPref.getInt(Constants.SORT_DIR_KEY, Constants.SORTING_DIRECTION.ASCENDING);
 
         switch(sortMethod){
             case(Constants.SORTING_METHODS.BY_NAME):
-                fileDataList = CustomSortMethods.sortByName(fileDataList, Constants.SORTING_DIRECTION.ASCENDING);
+                fileDataList = CustomSortMethods.sortByName(fileDataList, sortDirection);
                 break;
             case(Constants.SORTING_METHODS.BY_DATE):
-                fileDataList = CustomSortMethods.sortByDate(fileDataList, Constants.SORTING_DIRECTION.DESCENDING);
+                fileDataList = CustomSortMethods.sortByDate(fileDataList, sortDirection);
                 break;
             case(Constants.SORTING_METHODS.BY_SIZE):
-                fileDataList = CustomSortMethods.sortBySize(fileDataList, Constants.SORTING_DIRECTION.ASCENDING);
+                fileDataList = CustomSortMethods.sortBySize(fileDataList, sortDirection);
                 break;
         }
         return fileDataList;

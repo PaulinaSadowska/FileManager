@@ -52,5 +52,8 @@
     <string name="completed">Ukończono</string>
     <string name="error_deleting_files">Nie można usunąć plików</string>
 
+    <string name="sorting_direction_ascending">Rosnąco</string>
+    <string name="sorting_direction_descending">Malejąco</string>
+
 
 </resources>
