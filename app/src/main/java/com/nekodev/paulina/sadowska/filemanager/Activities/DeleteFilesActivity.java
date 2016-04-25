@@ -108,10 +108,12 @@ public class DeleteFilesActivity extends AppCompatActivity {
                         }
                     }
                 }
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(Constants.SLEEP) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 it.remove(); // avoids a ConcurrentModificationException
             }

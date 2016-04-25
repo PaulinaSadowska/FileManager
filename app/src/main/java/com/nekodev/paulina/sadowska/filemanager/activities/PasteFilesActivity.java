@@ -1,7 +1,9 @@
 package com.nekodev.paulina.sadowska.filemanager.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -19,6 +21,8 @@ import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FilePasteUtils;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -111,22 +115,41 @@ public class PasteFilesActivity extends AppCompatActivity {
         }
     }
 
-    private class CopyFilesTask extends AsyncTask<Void, Integer, Boolean> {
-        /**
-         * The system calls this to perform work in a worker thread and
-         * delivers it the parameters given to AsyncTask.execute()
-         */
+    private class CopyFilesTask extends AsyncTask<Void, String, Boolean> {
+
+        private final Object lock = new Object();
+
         protected Boolean doInBackground(Void... urls) {
+            ArrayList<File> filesInDestDirectory = FileUtils.getListOfFiles(destinationPath);
             Iterator it = fileList.entrySet().iterator();
             int i = 0;
             while (it.hasNext() && !interrupt) {
                 Map.Entry pair = (Map.Entry) it.next();
-                FilePasteUtils.pasteWithChildren(basePath, destinationPath, (String) pair.getKey(), (FileType) pair.getValue(), copy);
-                publishProgress(++i);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                String fileName = (String) pair.getKey();
+                i++;
+                if(filesInDestDirectory.contains(fileName)){
+                    //TODO - FILE ALREADY EXISTS IN DIRECTORY: show dialog and ask what to do now
+                }
+                else {
+                    if(FilePasteUtils.pasteWithChildren(basePath, destinationPath, fileName, (FileType) pair.getValue(), copy))
+                        publishProgress(i+"");
+                    else {
+                        publishProgress(i + "", fileName);
+                        synchronized(lock){
+                            try {
+                                lock.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+                if(Constants.SLEEP) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 it.remove(); // avoids a ConcurrentModificationException
             }
@@ -134,10 +157,27 @@ public class PasteFilesActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
+        protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            mProgressMessage.setText(getProgressMessage(values[0]));
-            mProgressBar.setProgress((values[0] * 100) / count);
+            int progress = Integer.parseInt(values[0]);
+            if(values.length<2) {
+                mProgressMessage.setText(getProgressMessage(progress));
+                mProgressBar.setProgress((progress * 100) / count);
+            }
+            else{
+                new AlertDialog.Builder(mActivity)
+                        .setTitle(getResources().getString(R.string.delete_alert_title))
+                        .setMessage(getResources().getString(R.string.error_paste) + " " + values[1])
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                synchronized(lock) {
+                                    lock.notify();
+                                }
+                            }
+                        })
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .show();
+            }
         }
 
         /**

@@ -55,5 +55,7 @@
     <string name="sorting_direction_ascending">Rosnąco</string>
     <string name="sorting_direction_descending">Malejąco</string>
 
+    <string name="error_paste">Nie można skopiować pliku </string>
+
 
 </resources>
