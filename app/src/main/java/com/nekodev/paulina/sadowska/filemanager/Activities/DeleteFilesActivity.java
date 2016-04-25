@@ -96,11 +96,10 @@ public class DeleteFilesActivity extends AppCompatActivity {
                 Map.Entry pair = (Map.Entry) it.next();
                 String fileName = (String) pair.getKey();
                 if(deleteWithChildren(FileUtils.getFullFileName(basePath, fileName), (FileType) pair.getValue())){
-                    i++;
-                    publishProgress(i+"");
+                    publishProgress(++i+"");
                 }
                 else{
-                    publishProgress(i+"", fileName);
+                    publishProgress(++i+"", fileName);
                     synchronized(lock){
                         try {
                             lock.wait();
@@ -122,7 +121,7 @@ public class DeleteFilesActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            if(values[1]==null){
+            if(values.length<2){
                 int progress = Integer.parseInt(values[0]);
                 mProgressMessage.setText(getProgressMessage(progress));
                 mProgressBar.setProgress((progress * 100) / count);

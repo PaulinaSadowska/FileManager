@@ -3,6 +3,8 @@ package com.nekodev.paulina.sadowska.filemanager;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import com.nekodev.paulina.sadowska.filemanager.data.FileType;
 import com.nekodev.paulina.sadowska.filemanager.utilities.CheckCounter;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,6 +33,15 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
     private String path;
     private int checkBoxesVisibility = View.GONE;
     private CheckCounter checkCounter = new CheckCounter();
+
+    private final ArrayList<String> imageFileExtensions;
+    {
+        imageFileExtensions = new ArrayList<String>();
+        imageFileExtensions.add("jpeg");
+        imageFileExtensions.add("jpg");
+        imageFileExtensions.add("png");
+        imageFileExtensions.add("gif");
+    };
 
     public FileListAdapter(ArrayList<FileDataItem> fileList, Activity activity, String path){
         this.mActivity = activity;
@@ -48,6 +60,16 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
         holder.bindViewHolder(mFileList.get(position));
         holder.mFileCheck.setVisibility(checkBoxesVisibility);
         holder.mFileCheck.setChecked(mFileList.get(position).isChecked());
+
+        File file = new  File(mFileList.get(position).getAbsolutePath());
+        String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+        if(file.exists() && extension != null){
+            if(imageFileExtensions.contains(extension)) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                holder.mFileIcon.setImageBitmap(myBitmap);
+            }
+        }
+
         holder.setClickListener(new FileViewHolder.ClickListener() {
             @Override
             public void onClick(View v, int pos, boolean isLongClick) {
