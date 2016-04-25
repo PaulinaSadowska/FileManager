@@ -21,7 +21,6 @@ import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FilePasteUtils;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -63,10 +62,9 @@ public class PasteFilesActivity extends AppCompatActivity {
         mProgressBar.setProgress(0);
         mProgressMessage.setText(getProgressMessage(0));
         mActivity = this;
-        if(isPossible()) {
+        if (isPossible()) {
             new CopyFilesTask().execute();
-        }
-        else{
+        } else {
             Toast.makeText(this, getString(R.string.error_paste_inside_base_subfolder), Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -83,15 +81,15 @@ public class PasteFilesActivity extends AppCompatActivity {
     }
 
     private String getProgressMessage(int i) {
-        if(copy)
-            return getString(R.string.copy_dialog_message) + " "+i+"/"+count;
+        if (copy)
+            return getString(R.string.copy_dialog_message) + " " + i + "/" + count;
 
-        return getString(R.string.cut_dialog_message) + " "+i+"/"+count;
+        return getString(R.string.cut_dialog_message) + " " + i + "/" + count;
 
     }
 
     private void setDialogTitle() {
-        if(copy)
+        if (copy)
             setTitle(getString(R.string.copy_dialog_title));
         else
             setTitle(getString(R.string.cut_dialog_title));
@@ -109,8 +107,8 @@ public class PasteFilesActivity extends AppCompatActivity {
         basePath = sharedPref.getString(Constants.SELECTED_FILES.PATH, "");
 
         for (int i = 0; i < count; i++) {
-            String fileName = sharedPref.getString(Constants.SELECTED_FILES.KEY+i, "");
-            String fileType = sharedPref.getString(Constants.SELECTED_FILES.TYPE+i, "");
+            String fileName = sharedPref.getString(Constants.SELECTED_FILES.KEY + i, "");
+            String fileType = sharedPref.getString(Constants.SELECTED_FILES.TYPE + i, "");
             fileList.put(fileName, FileUtils.getFileType(fileType));
         }
     }
@@ -118,40 +116,30 @@ public class PasteFilesActivity extends AppCompatActivity {
     private class CopyFilesTask extends AsyncTask<Void, String, Boolean> {
 
         private final Object lock = new Object();
+        private String newFileName;
 
         protected Boolean doInBackground(Void... urls) {
-            ArrayList<File> filesInDestDirectory = FileUtils.getListOfFiles(destinationPath);
+            ArrayList<String> filesInDestDirectory = FileUtils.getListOfFileNames(destinationPath);
             Iterator it = fileList.entrySet().iterator();
             int i = 0;
             while (it.hasNext() && !interrupt) {
                 Map.Entry pair = (Map.Entry) it.next();
-                String fileName = (String) pair.getKey();
+                newFileName = (String) pair.getKey();
                 i++;
-                if(filesInDestDirectory.contains(fileName)){
-                    //TODO - FILE ALREADY EXISTS IN DIRECTORY: show dialog and ask what to do now
+                if (filesInDestDirectory.contains(newFileName)) {
+                    publishProgress(i + "", newFileName, "error");
+                    lock();
                 }
-                else {
-                    if(FilePasteUtils.pasteWithChildren(basePath, destinationPath, fileName, (FileType) pair.getValue(), copy))
-                        publishProgress(i+"");
+                if(!newFileName.equals("")) {
+                    if (FilePasteUtils.pasteWithChildren(basePath, destinationPath, (String) pair.getKey(), newFileName, (FileType) pair.getValue(), copy))
+                        publishProgress(i + "");
                     else {
-                        publishProgress(i + "", fileName);
-                        synchronized(lock){
-                            try {
-                                lock.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-                if(Constants.SLEEP) {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        publishProgress(i + "", newFileName);
+                        lock();
                     }
                 }
                 it.remove(); // avoids a ConcurrentModificationException
+                sleep();
             }
             return true;
         }
@@ -160,23 +148,78 @@ public class PasteFilesActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
             int progress = Integer.parseInt(values[0]);
-            if(values.length<2) {
+            if (values.length < 2) {
                 mProgressMessage.setText(getProgressMessage(progress));
                 mProgressBar.setProgress((progress * 100) / count);
-            }
-            else{
+            } else if (values.length < 3) {
                 new AlertDialog.Builder(mActivity)
-                        .setTitle(getResources().getString(R.string.delete_alert_title))
+                        .setTitle(getResources().getString(R.string.paste_alert_title))
                         .setMessage(getResources().getString(R.string.error_paste) + " " + values[1])
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                synchronized(lock) {
-                                    lock.notify();
-                                }
+                                unlock();
                             }
                         })
                         .setIcon(R.drawable.ic_warning_black_24dp)
                         .show();
+            } else {
+                final String fileName = values[1];
+                new AlertDialog.Builder(mActivity)
+                        .setTitle(getResources().getString(R.string.paste_alert_title))
+                        .setMessage(getResources().getString(R.string.error_paste_file_exists_1) + " " +
+                                values[1] + " " + getResources().getString(R.string.error_paste_file_exists_2))
+                        .setPositiveButton(R.string.paste_keep_both, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                int pos = fileName.lastIndexOf(".");
+                                String name = "";
+                                String extension = "";
+                                if (pos > 0) {
+                                    name = fileName.substring(0, pos);
+                                    extension = fileName.substring(pos+1, fileName.length());
+                                }
+                                newFileName = name + " copy." + extension;
+                                unlock();
+                            }
+                        })
+                        .setNeutralButton(R.string.paste_skip, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                newFileName = "";
+                                unlock();
+                            }
+                        })
+                        .setNegativeButton(R.string.paste_overwrite, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                unlock();
+                            }
+                        })
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .show();
+            }
+        }
+
+        private void lock() {
+            synchronized (lock) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        private void unlock() {
+            synchronized (lock) {
+                lock.notify();
+            }
+        }
+
+        private void sleep() {
+            if (Constants.SLEEP) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

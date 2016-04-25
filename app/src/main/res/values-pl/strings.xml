@@ -57,5 +57,12 @@
 
     <string name="error_paste">Nie można skopiować pliku </string>
 
+    <string name="paste_keep_both">ZATRZYMAJ OBA</string>
+    <string name="paste_skip">POMIŃ</string>
+    <string name="paste_overwrite">NADPISZ</string>
+    <string name="paste_alert_title">Wklejanie pliku</string>
+    <string name="error_paste_file_exists_1">Plik</string>
+    <string name="error_paste_file_exists_2">już istnieje w tym folderze</string>
+
 
 </resources>

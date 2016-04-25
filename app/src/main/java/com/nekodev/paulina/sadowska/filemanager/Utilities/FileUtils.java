@@ -24,6 +24,20 @@ public class FileUtils {
         return fileList;
     }
 
+    public static ArrayList<String> getListOfFileNames(String path) {
+        File dir = new File(path);
+        String[] list = dir.list();
+        ArrayList<String> fileList = new ArrayList<>();
+        if (list != null) {
+            for (String fileName : list) {
+                if (!fileName.startsWith(".")) {
+                    fileList.add(fileName);
+                }
+            }
+        }
+        return fileList;
+    }
+
     public static FileType getFileType(File file) {
         if(!file.canRead())
             return FileType.UNKNOWN;

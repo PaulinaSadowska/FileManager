@@ -19,27 +19,27 @@ import java.util.ArrayList;
 public class FilePasteUtils {
 
 
-    public static boolean pasteWithChildren(String basePath, String destinationPath, String fileName, FileType fileType, boolean copy) {
+    public static boolean pasteWithChildren(String basePath, String destinationPath, String fileName, String newFileName, FileType fileType, boolean copy) {
         if (fileType == FileType.FILE) {
-            return FilePasteUtils.pasteFile(basePath, destinationPath, fileName, copy);
+            return FilePasteUtils.pasteFile(basePath, destinationPath, fileName, newFileName, copy);
         }
         if (fileType == FileType.DIRECTORY) {
-            return pasteDirectory(basePath, destinationPath, fileName, copy);
+            return pasteDirectory(basePath, destinationPath, fileName, newFileName, copy);
         }
         return false; //unknown type or cannot read
     }
 
-    private static boolean pasteDirectory(String basePath, String destinationPath, String directoryName, boolean copy) {
+    private static boolean pasteDirectory(String basePath, String destinationPath, String directoryName, String newFileName, boolean copy) {
 
         ArrayList<File> fileList = FileUtils.getListOfFiles(FileUtils.getFullFileName(basePath, directoryName));
         boolean result = true;
-        File dir = new File(FileUtils.getFullFileName(destinationPath, directoryName));
+        File dir = new File(FileUtils.getFullFileName(destinationPath, newFileName));
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
         for (File file : fileList) {
-            result = (result && pasteWithChildren(file.getParent(), dir.getAbsolutePath(), file.getName(), FileUtils.getFileType(file), copy));
+            result = (result && pasteWithChildren(file.getParent(), dir.getAbsolutePath(), file.getName(), file.getName(), FileUtils.getFileType(file), copy));
         }
         if (!copy) {
             new File(FileUtils.getFullFileName(basePath, directoryName)).delete();
@@ -47,12 +47,12 @@ public class FilePasteUtils {
         return result;
     }
 
-    private static boolean pasteFile(String basePath, String destinationPath, String fileName, boolean copy){
+    private static boolean pasteFile(String basePath, String destinationPath, String fileName, String newFileName, boolean copy){
         InputStream in;
         OutputStream out;
         try {
             in = new FileInputStream(FileUtils.getFullFileName(basePath, fileName));
-            out = new FileOutputStream(FileUtils.getFullFileName(destinationPath, fileName));
+            out = new FileOutputStream(FileUtils.getFullFileName(destinationPath, newFileName));
 
             byte[] buffer = new byte[1024];
             int read;

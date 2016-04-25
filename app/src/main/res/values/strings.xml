@@ -57,4 +57,11 @@
     <string name="sorting_direction_descending">Descending</string>
     <string name="error_paste">Could not paste file</string>
 
+    <string name="paste_keep_both">KEEP BOTH</string>
+    <string name="paste_skip">SKIP</string>
+    <string name="paste_overwrite">OVERWRITE</string>
+    <string name="paste_alert_title">Paste file</string>
+    <string name="error_paste_file_exists_1">File</string>
+    <string name="error_paste_file_exists_2">already exists in this directory</string>
+
 </resources>
