@@ -63,5 +63,8 @@
     <string name="paste_alert_title">Paste file</string>
     <string name="error_paste_file_exists_1">File</string>
     <string name="error_paste_file_exists_2">already exists in this directory</string>
+    <string name="cannot_open_1">Cannot open</string>
+    <string name="cannot_open_2">file</string>
+    <string name="file_not_accessible">is not accessible</string>
 
 </resources>

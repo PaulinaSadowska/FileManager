@@ -17,6 +17,7 @@ import com.nekodev.paulina.sadowska.filemanager.activities.MainActivity;
 import com.nekodev.paulina.sadowska.filemanager.data.FileDataItem;
 import com.nekodev.paulina.sadowska.filemanager.data.FileType;
 import com.nekodev.paulina.sadowska.filemanager.utilities.CheckCounter;
+import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
 import java.io.File;
@@ -61,15 +62,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
         holder.mFileCheck.setVisibility(checkBoxesVisibility);
         holder.mFileCheck.setChecked(mFileList.get(position).isChecked());
 
-        File file = new  File(mFileList.get(position).getAbsolutePath());
-        String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
-        if(file.exists() && extension != null){
-            if(imageFileExtensions.contains(extension)) {
-                Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                holder.mFileIcon.setImageBitmap(myBitmap);
-            }
-        }
-
         holder.setClickListener(new FileViewHolder.ClickListener() {
             @Override
             public void onClick(View v, int pos, boolean isLongClick) {
@@ -82,12 +74,38 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
             @Override
             public void onCheckboxClick(View v, int position, boolean isChecked) {
-                if(checkCounter.updateCheckCount(isChecked)){
+                if (checkCounter.updateCheckCount(isChecked)) {
                     hideCheckBoxes();
                 }
                 mFileList.get(position).setIsChecked(isChecked);
             }
         });
+
+        File file = new  File(mFileList.get(position).getAbsolutePath());
+        String extension = FileUtils.getFileExtension(file.getName());
+        if(file.exists() && extension != null){
+            if(imageFileExtensions.contains(extension)) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                holder.mFileIcon.setImageBitmap(scaleDown(myBitmap, 200, false));
+            }
+        }
+    }
+
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+                                   boolean filter) {
+        float ratio = Math.min(
+                maxImageSize / realImage.getWidth(),
+                maxImageSize / realImage.getHeight());
+
+        if(ratio>1)
+            return realImage;
+
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
+
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+        return newBitmap;
     }
 
 
@@ -96,16 +114,16 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
         String filename = mFileList.get(pos).getName();
         filename = FileUtils.getFullFileName(path, filename);
         if (!file.isReadable()) {
-            Toast.makeText(mActivity, filename + " is not accessible", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, filename + " " + mActivity.getString(R.string.file_not_accessible), Toast.LENGTH_SHORT).show();
         } else if (file.getType()== FileType.DIRECTORY) {
             Intent intent = new Intent(mActivity, MainActivity.class);
-            intent.putExtra("path", filename);
+            intent.putExtra(Constants.INTENT_KEYS.PATH, filename);
             mActivity.startActivity(intent);
         } else {
             Intent intent = new Intent();
             intent.setAction(android.content.Intent.ACTION_VIEW);
             Uri uri = Uri.parse("file://" + file.getAbsolutePath());
-            String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+            String extension = FileUtils.getFileExtension(file.getName());
             String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
             if (type != null) {
                 intent.setDataAndType(uri, type);
@@ -113,8 +131,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     mActivity.startActivityForResult(intent, 10);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(mActivity, "cannot open " + filename + " file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, mActivity.getString(R.string.cannot_open_1) + " " + filename + " " + mActivity.getString(R.string.cannot_open_2), Toast.LENGTH_SHORT).show();
                 }
+            }
+            else{
+                Toast.makeText(mActivity, mActivity.getString(R.string.cannot_open_1) + " " + filename + " " + mActivity.getString(R.string.cannot_open_2), Toast.LENGTH_SHORT).show();
             }
         }
     }

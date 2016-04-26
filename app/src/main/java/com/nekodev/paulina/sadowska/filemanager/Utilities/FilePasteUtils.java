@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by Paulina Sadowska on 24.04.16.
@@ -20,6 +21,9 @@ public class FilePasteUtils {
 
 
     public static boolean pasteWithChildren(String basePath, String destinationPath, String fileName, String newFileName, FileType fileType, boolean copy) {
+        if(Objects.equals(basePath, destinationPath) && Objects.equals(fileName, newFileName)){
+            return true;
+        }
         if (fileType == FileType.FILE) {
             return FilePasteUtils.pasteFile(basePath, destinationPath, fileName, newFileName, copy);
         }

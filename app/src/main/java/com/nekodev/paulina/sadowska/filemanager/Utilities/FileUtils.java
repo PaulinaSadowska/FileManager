@@ -64,4 +64,13 @@ public class FileUtils {
         }
     }
 
+    public static String getFileExtension(String fileName) {
+        int pos = fileName.lastIndexOf(".");
+        String extension = "";
+        if (pos > 0) {
+            extension = fileName.substring(pos + 1, fileName.length());
+        }
+        return extension;
+    }
+
 }

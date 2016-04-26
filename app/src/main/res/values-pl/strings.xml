@@ -64,5 +64,10 @@
     <string name="error_paste_file_exists_1">Plik</string>
     <string name="error_paste_file_exists_2">już istnieje w tym folderze</string>
 
+    <string name="cannot_open_1">Nie można otworzyć pliku </string>
+    <string name="cannot_open_2"></string>
+
+    <string name="file_not_accessible"> nie jest do odczytu</string>
+
 
 </resources>

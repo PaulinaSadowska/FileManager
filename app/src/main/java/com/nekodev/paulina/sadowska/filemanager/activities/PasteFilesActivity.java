@@ -21,6 +21,7 @@ import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FilePasteUtils;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -125,13 +126,14 @@ public class PasteFilesActivity extends AppCompatActivity {
             while (it.hasNext() && !interrupt) {
                 Map.Entry pair = (Map.Entry) it.next();
                 newFileName = (String) pair.getKey();
+                String oldName = newFileName;
                 i++;
                 if (filesInDestDirectory.contains(newFileName)) {
                     publishProgress(i + "", newFileName, "error");
                     lock();
                 }
-                if(!newFileName.equals("")) {
-                    if (FilePasteUtils.pasteWithChildren(basePath, destinationPath, (String) pair.getKey(), newFileName, (FileType) pair.getValue(), copy))
+                if (!newFileName.equals("")) {
+                    if (FilePasteUtils.pasteWithChildren(basePath, destinationPath, oldName, newFileName, (FileType) pair.getValue(), copy))
                         publishProgress(i + "");
                     else {
                         publishProgress(i + "", newFileName);
@@ -170,14 +172,7 @@ public class PasteFilesActivity extends AppCompatActivity {
                                 values[1] + " " + getResources().getString(R.string.error_paste_file_exists_2))
                         .setPositiveButton(R.string.paste_keep_both, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                int pos = fileName.lastIndexOf(".");
-                                String name = "";
-                                String extension = "";
-                                if (pos > 0) {
-                                    name = fileName.substring(0, pos);
-                                    extension = fileName.substring(pos+1, fileName.length());
-                                }
-                                newFileName = name + " copy." + extension;
+                                newFileName = renameFile(fileName);
                                 unlock();
                             }
                         })
@@ -193,8 +188,28 @@ public class PasteFilesActivity extends AppCompatActivity {
                             }
                         })
                         .setIcon(R.drawable.ic_warning_black_24dp)
+                        .setCancelable(false)
                         .show();
             }
+        }
+
+        private String renameFile(String fileName) {
+            File file = new File(FileUtils.getFullFileName(basePath, fileName));
+            if (file.isFile()) {
+                int pos = fileName.lastIndexOf(".");
+                String name = "";
+                String extension = "";
+                if (pos > 0) {
+                    name = fileName.substring(0, pos);
+                    extension = fileName.substring(pos + 1, fileName.length());
+                }
+                return name + " copy." + extension;
+            }
+            else if (file.isDirectory())
+                return fileName + " copy";
+
+            return fileName;
+
         }
 
         private void lock() {
