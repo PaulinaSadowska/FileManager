@@ -160,6 +160,9 @@ public class DeleteFilesActivity extends AppCompatActivity {
         }
 
         private boolean deleteWithChildren(String path, FileType fileType) {
+            if(interrupt){
+                return true;
+            }
             if(fileType==FileType.FILE){
                 return deleteFile(path);
             }
@@ -175,7 +178,7 @@ public class DeleteFilesActivity extends AppCompatActivity {
             for(File file: fileList){
                 result = (result && deleteWithChildren(file.getPath(), FileUtils.getFileType(file)));
             }
-            if(result){
+            if(result && !interrupt){
                 File dir = new File(path);
                 result = dir.delete();
             }
