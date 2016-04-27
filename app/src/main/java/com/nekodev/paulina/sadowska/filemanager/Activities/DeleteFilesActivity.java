@@ -38,16 +38,17 @@ public class DeleteFilesActivity extends AppCompatActivity {
     ProgressBar mProgressBar;
     @Bind(R.id.loading_progress_cancel_button)
     Button mCancelButton;
-    boolean interrupt = false;
 
     private HashMap<String, FileType> fileList;
     private String basePath;
     private int count;
     private Activity mActivity;
+    private DeleteFilesTask deleteTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setFinishOnTouchOutside(false);
         setContentView(R.layout.loading_dialog_activity);
         ButterKnife.bind(this);
 
@@ -59,27 +60,36 @@ public class DeleteFilesActivity extends AppCompatActivity {
         mProgressBar.setProgress(0);
         mProgressMessage.setText(getProgressMessage(0));
         mActivity = this;
-        if(isPossible()) {
-            new DeleteFilesTask().execute();
-        }
-        else{
+        deleteTask = new DeleteFilesTask();
+        if (isPossible()) {
+            deleteTask.execute();
+        } else {
             Toast.makeText(this, getString(R.string.error_deleting_files), Toast.LENGTH_SHORT).show();
             finish();
         }
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                interrupt = true;
+                deleteTask.stop();
             }
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(deleteTask.isCancelled()) {
+            deleteTask.stop();
+            deleteTask.cancel(true);
+        }
+    }
+
     private boolean isPossible() {
-        return count>0;
+        return count > 0;
     }
 
     private String getProgressMessage(int i) {
-        return getString(R.string.delete_dialog_message) + " "+i+"/"+count;
+        return getString(R.string.delete_dialog_message) + " " + i + "/" + count;
     }
 
     private class DeleteFilesTask extends AsyncTask<Void, String, Boolean> {
@@ -88,6 +98,12 @@ public class DeleteFilesActivity extends AppCompatActivity {
          * delivers it the parameters given to AsyncTask.execute()
          */
         private final Object lock = new Object();
+        private boolean interrupt = false;
+
+        public void stop() {
+            interrupt = true;
+            publishProgress("interrupt");
+        }
 
         protected Boolean doInBackground(Void... urls) {
             Iterator it = fileList.entrySet().iterator();
@@ -95,26 +111,13 @@ public class DeleteFilesActivity extends AppCompatActivity {
             while (it.hasNext() && !interrupt) {
                 Map.Entry pair = (Map.Entry) it.next();
                 String fileName = (String) pair.getKey();
-                if(deleteWithChildren(FileUtils.getFullFileName(basePath, fileName), (FileType) pair.getValue())){
-                    publishProgress(++i+"");
+                if (deleteWithChildren(FileUtils.getFullFileName(basePath, fileName), (FileType) pair.getValue())) {
+                    publishProgress(++i + "");
+                } else {
+                    publishProgress(++i + "", fileName);
+                    lock();
                 }
-                else{
-                    publishProgress(++i+"", fileName);
-                    synchronized(lock){
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                if(Constants.SLEEP) {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                sleep();
                 it.remove(); // avoids a ConcurrentModificationException
             }
             return true;
@@ -123,25 +126,27 @@ public class DeleteFilesActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            if(values.length<2){
+            if (interrupt) {
+                mProgressMessage.setText(getString(R.string.canceling));
+                return;
+            }
+            if (values.length < 2) {
                 int progress = Integer.parseInt(values[0]);
                 mProgressMessage.setText(getProgressMessage(progress));
                 mProgressBar.setProgress((progress * 100) / count);
-            }
-            else {
+            } else {
                 new AlertDialog.Builder(mActivity)
                         .setTitle(getResources().getString(R.string.delete_alert_title))
                         .setMessage(getResources().getString(R.string.error_deleting_files) + " " + values[1])
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                synchronized(lock) {
-                                    lock.notify();
-                                }
+                                unlock();
                             }
                         })
                         .setIcon(R.drawable.ic_warning_black_24dp)
                         .show();
             }
+
         }
 
         /**
@@ -160,34 +165,60 @@ public class DeleteFilesActivity extends AppCompatActivity {
         }
 
         private boolean deleteWithChildren(String path, FileType fileType) {
-            if(interrupt){
+            if (interrupt) {
                 return true;
             }
-            if(fileType==FileType.FILE){
+            if (fileType == FileType.FILE) {
                 return deleteFile(path);
             }
-            if(fileType==FileType.DIRECTORY){
+            if (fileType == FileType.DIRECTORY) {
                 return deleteDirectory(path);
             }
             return false; //unknown type or cannot read
         }
 
         private boolean deleteDirectory(String path) {
-            ArrayList<File> fileList =  FileUtils.getListOfFiles(path);
+            ArrayList<File> fileList = FileUtils.getListOfFiles(path);
             boolean result = true;
-            for(File file: fileList){
+            for (File file : fileList) {
                 result = (result && deleteWithChildren(file.getPath(), FileUtils.getFileType(file)));
             }
-            if(result && !interrupt){
+            if (result && !interrupt) {
                 File dir = new File(path);
                 result = dir.delete();
             }
             return result;
         }
 
-        private boolean deleteFile(String fullPath){
+        private boolean deleteFile(String fullPath) {
             File file = new File(fullPath);
             return file.delete();
+        }
+
+        private void lock() {
+            synchronized (lock) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        private void unlock() {
+            synchronized (lock) {
+                lock.notify();
+            }
+        }
+
+        private void sleep() {
+            if (Constants.SLEEP) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

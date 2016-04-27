@@ -66,5 +66,6 @@
     <string name="cannot_open_1">Cannot open</string>
     <string name="cannot_open_2">file</string>
     <string name="file_not_accessible">is not accessible</string>
+    <string name="canceling">Canceling...</string>
 
 </resources>

@@ -17,23 +17,33 @@ import java.util.Objects;
 /**
  * Created by Paulina Sadowska on 24.04.16.
  */
-public class FilePasteUtils {
+public class FilePasteHelper {
+
+    private boolean interrupt;
+    private boolean copy;
+
+    public FilePasteHelper(boolean copy){
+        this.copy = copy;
+    }
 
 
-    public static boolean pasteWithChildren(String basePath, String destinationPath, String fileName, String newFileName, FileType fileType, boolean copy) {
+    public boolean pasteWithChildren(String basePath, String destinationPath, String fileName, String newFileName, FileType fileType) {
+        if(interrupt){
+            return true;
+        }
         if(Objects.equals(basePath, destinationPath) && Objects.equals(fileName, newFileName)){
             return true;
         }
         if (fileType == FileType.FILE) {
-            return FilePasteUtils.pasteFile(basePath, destinationPath, fileName, newFileName, copy);
+            return pasteFile(basePath, destinationPath, fileName, newFileName);
         }
         if (fileType == FileType.DIRECTORY) {
-            return pasteDirectory(basePath, destinationPath, fileName, newFileName, copy);
+            return pasteDirectory(basePath, destinationPath, fileName, newFileName);
         }
         return false; //unknown type or cannot read
     }
 
-    private static boolean pasteDirectory(String basePath, String destinationPath, String directoryName, String newFileName, boolean copy) {
+    private boolean pasteDirectory(String basePath, String destinationPath, String directoryName, String newFileName) {
 
         ArrayList<File> fileList = FileUtils.getListOfFiles(FileUtils.getFullFileName(basePath, directoryName));
         boolean result = true;
@@ -43,7 +53,7 @@ public class FilePasteUtils {
         }
 
         for (File file : fileList) {
-            result = (result && pasteWithChildren(file.getParent(), dir.getAbsolutePath(), file.getName(), file.getName(), FileUtils.getFileType(file), copy));
+            result = (result && pasteWithChildren(file.getParent(), dir.getAbsolutePath(), file.getName(), file.getName(), FileUtils.getFileType(file)));
         }
         if (!copy) {
             new File(FileUtils.getFullFileName(basePath, directoryName)).delete();
@@ -51,7 +61,7 @@ public class FilePasteUtils {
         return result;
     }
 
-    private static boolean pasteFile(String basePath, String destinationPath, String fileName, String newFileName, boolean copy){
+    private boolean pasteFile(String basePath, String destinationPath, String fileName, String newFileName){
         InputStream in;
         OutputStream out;
         try {
@@ -82,5 +92,9 @@ public class FilePasteUtils {
             return false;
         }
         return true;
+    }
+
+    public void interrupt() {
+        this.interrupt = true;
     }
 }

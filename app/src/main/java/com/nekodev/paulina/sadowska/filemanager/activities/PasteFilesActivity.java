@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.nekodev.paulina.sadowska.filemanager.R;
 import com.nekodev.paulina.sadowska.filemanager.data.FileType;
 import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
-import com.nekodev.paulina.sadowska.filemanager.utilities.FilePasteUtils;
+import com.nekodev.paulina.sadowska.filemanager.utilities.FilePasteHelper;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
 import java.io.File;
@@ -48,11 +48,12 @@ public class PasteFilesActivity extends AppCompatActivity {
     private String basePath;
     private String destinationPath;
     private Activity mActivity;
-    private boolean interrupt = false;
+    private CopyFilesTask copyFiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setFinishOnTouchOutside(false);
         setContentView(R.layout.loading_dialog_activity);
         ButterKnife.bind(this);
 
@@ -63,8 +64,9 @@ public class PasteFilesActivity extends AppCompatActivity {
         mProgressBar.setProgress(0);
         mProgressMessage.setText(getProgressMessage(0));
         mActivity = this;
+        copyFiles = new CopyFilesTask();
         if (isPossible()) {
-            new CopyFilesTask().execute();
+            copyFiles.execute();
         } else {
             Toast.makeText(this, getString(R.string.error_paste_inside_base_subfolder), Toast.LENGTH_SHORT).show();
             finish();
@@ -72,9 +74,18 @@ public class PasteFilesActivity extends AppCompatActivity {
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                interrupt = true;
+                copyFiles.stop();
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(!copyFiles.isCancelled()) {
+            copyFiles.stop();
+            copyFiles.cancel(true);
+        }
     }
 
     private boolean isPossible() {
@@ -118,6 +129,14 @@ public class PasteFilesActivity extends AppCompatActivity {
 
         private final Object lock = new Object();
         private String newFileName;
+        private FilePasteHelper pasteHelper;
+        private boolean interrupt = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pasteHelper = new FilePasteHelper(copy);
+        }
 
         protected Boolean doInBackground(Void... urls) {
             ArrayList<String> filesInDestDirectory = FileUtils.getListOfFileNames(destinationPath);
@@ -133,7 +152,7 @@ public class PasteFilesActivity extends AppCompatActivity {
                     lock();
                 }
                 if (!newFileName.equals("")) {
-                    if (FilePasteUtils.pasteWithChildren(basePath, destinationPath, oldName, newFileName, (FileType) pair.getValue(), copy))
+                    if (pasteHelper.pasteWithChildren(basePath, destinationPath, oldName, newFileName, (FileType) pair.getValue()))
                         publishProgress(i + "");
                     else {
                         publishProgress(i + "", newFileName);
@@ -149,6 +168,10 @@ public class PasteFilesActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
+            if(interrupt){
+                mProgressMessage.setText(getString(R.string.canceling));
+                return;
+            }
             int progress = Integer.parseInt(values[0]);
             if (values.length < 2) {
                 mProgressMessage.setText(getProgressMessage(progress));
@@ -236,6 +259,12 @@ public class PasteFilesActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        }
+
+        public void stop(){
+            interrupt = true;
+            pasteHelper.interrupt();
+            publishProgress("interrupt");
         }
 
         /**

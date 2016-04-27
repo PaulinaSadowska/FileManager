@@ -70,6 +70,7 @@
     <string name="cannot_open_2"></string>
 
     <string name="file_not_accessible"> nie jest do odczytu</string>
+    <string name="canceling">Anulowanie...</string>
 
 
 </resources>
