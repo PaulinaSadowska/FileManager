@@ -2,16 +2,16 @@ package com.nekodev.paulina.sadowska.filemanager.utilities;
 
 import com.nekodev.paulina.sadowska.filemanager.data.FileDataItem;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by Paulina Sadowska on 23.04.16.
  */
 public class CustomSortMethods {
 
-    public static ArrayList<FileDataItem> sortByName(ArrayList<FileDataItem> fileDataList, final int AscOrDesc) {
+    public static List<FileDataItem> sortByName(List<FileDataItem> fileDataList, final int AscOrDesc) {
         Collections.sort(fileDataList, new Comparator<FileDataItem>() {
             @Override
             public int compare(final FileDataItem file1, final FileDataItem file2) {
@@ -21,7 +21,7 @@ public class CustomSortMethods {
         return fileDataList;
     }
 
-    public static  ArrayList<FileDataItem> sortByDate(ArrayList<FileDataItem> fileDataList, final int AscOrDesc) {
+    public static List<FileDataItem> sortByDate(List<FileDataItem> fileDataList, final int AscOrDesc) {
         Collections.sort(fileDataList, new Comparator<FileDataItem>() {
             @Override
             public int compare(final FileDataItem file1, final FileDataItem file2) {
@@ -31,7 +31,7 @@ public class CustomSortMethods {
         return fileDataList;
     }
 
-    public static  ArrayList<FileDataItem> sortBySize(ArrayList<FileDataItem> fileDataList, final int AscOrDesc) {
+    public static  List<FileDataItem> sortBySize(List<FileDataItem> fileDataList, final int AscOrDesc) {
         Collections.sort(fileDataList, new Comparator<FileDataItem>() {
             @Override
             public int compare(final FileDataItem file1, final FileDataItem file2) {

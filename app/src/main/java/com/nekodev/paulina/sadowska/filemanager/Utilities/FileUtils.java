@@ -1,5 +1,7 @@
 package com.nekodev.paulina.sadowska.filemanager.utilities;
 
+import android.graphics.Bitmap;
+
 import com.nekodev.paulina.sadowska.filemanager.data.FileType;
 
 import java.io.File;
@@ -71,6 +73,22 @@ public class FileUtils {
             extension = fileName.substring(pos + 1, fileName.length());
         }
         return extension;
+    }
+
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+                                   boolean filter) {
+        float ratio = Math.min(
+                maxImageSize / realImage.getWidth(),
+                maxImageSize / realImage.getHeight());
+
+        if(ratio>1)
+            return realImage;
+
+        int width = Math.round(ratio * realImage.getWidth());
+        int height = Math.round(ratio * realImage.getHeight());
+
+        return Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
     }
 
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,31 +19,22 @@ import com.nekodev.paulina.sadowska.filemanager.utilities.CheckCounter;
 import com.nekodev.paulina.sadowska.filemanager.utilities.Constants;
 import com.nekodev.paulina.sadowska.filemanager.utilities.FileUtils;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Created by Paulina Sadowska on 09.04.16.
  */
 public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
-    private ArrayList<FileDataItem> mFileList;
+    private LinkedList<FileDataItem> mFileList;
+    private HashMap<Integer, Bitmap> mFileIcons = new HashMap<>();
     private Activity mActivity;
     private String path;
     private int checkBoxesVisibility = View.GONE;
     private CheckCounter checkCounter = new CheckCounter();
 
-    private final ArrayList<String> imageFileExtensions;
-    {
-        imageFileExtensions = new ArrayList<String>();
-        imageFileExtensions.add("jpeg");
-        imageFileExtensions.add("jpg");
-        imageFileExtensions.add("png");
-        imageFileExtensions.add("gif");
-    };
-
-    public FileListAdapter(ArrayList<FileDataItem> fileList, Activity activity, String path){
+    public FileListAdapter(LinkedList<FileDataItem> fileList, Activity activity, String path){
         this.mActivity = activity;
         this.mFileList = fileList;
         this.path = path;
@@ -58,7 +48,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
     @Override
     public void onBindViewHolder(FileViewHolder holder, final int position) {
-        holder.bindViewHolder(mFileList.get(position));
+        Bitmap icon = mFileIcons.get(position);
+        if(icon != null) {
+            holder.bindViewHolder(mFileList.get(position), icon);
+        }
+        else{
+            holder.bindViewHolder(mFileList.get(position));
+        }
         holder.mFileCheck.setVisibility(checkBoxesVisibility);
         holder.mFileCheck.setChecked(mFileList.get(position).isChecked());
 
@@ -80,32 +76,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileViewHolder> {
                 mFileList.get(position).setIsChecked(isChecked);
             }
         });
-
-        File file = new  File(mFileList.get(position).getAbsolutePath());
-        String extension = FileUtils.getFileExtension(file.getName());
-        if(file.exists() && extension != null){
-            if(imageFileExtensions.contains(extension)) {
-                Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                holder.mFileIcon.setImageBitmap(scaleDown(myBitmap, 200, false));
-            }
-        }
     }
-
-    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
-                                   boolean filter) {
-        float ratio = Math.min(
-                maxImageSize / realImage.getWidth(),
-                maxImageSize / realImage.getHeight());
-
-        if(ratio>1)
-            return realImage;
-
-        int width = Math.round((float) ratio * realImage.getWidth());
-        int height = Math.round((float) ratio * realImage.getHeight());
-
-        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
-                height, filter);
-        return newBitmap;
+    
+    public void setIconFromImageResource(int position, Bitmap bitmap){
+        mFileIcons.put(position, bitmap);
+        notifyItemChanged(position);
     }
 
 

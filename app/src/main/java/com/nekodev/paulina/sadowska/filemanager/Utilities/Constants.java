@@ -45,4 +45,13 @@ public class Constants {
         public static final String COPY_OR_CUT = "copy_or_cut"; //true - copy, false - cut
         public static final String TYPE = "selected_file_type";
     }
+
+    public static final ArrayList<String> imageFileExtensions;
+    static {
+        imageFileExtensions = new ArrayList<>();
+        imageFileExtensions.add("jpeg");
+        imageFileExtensions.add("jpg");
+        imageFileExtensions.add("png");
+        imageFileExtensions.add("gif");
+    }
 }

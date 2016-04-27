@@ -1,5 +1,6 @@
 package com.nekodev.paulina.sadowska.filemanager;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
@@ -48,6 +49,12 @@ public class FileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         mFileDate.setText(file.getLastModifiedString());
         mFileSize.setText(file.getSizeString());
     }
+
+    public void bindViewHolder(FileDataItem file, Bitmap icon){
+        this.bindViewHolder(file);
+        mFileIcon.setImageBitmap(icon);
+    }
+
 
 
 
