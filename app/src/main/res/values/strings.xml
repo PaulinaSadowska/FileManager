@@ -25,6 +25,7 @@
     <string name="december">Dec</string>
 
     <string name="unknown_date">Date unknown</string>
+    <string name="delete">Delete</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_copy">Copy</string>
     <string name="menu_cut">Cut</string>

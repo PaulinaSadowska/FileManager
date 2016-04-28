@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class Constants {
 
-    public static final boolean SLEEP = true;
+    public static final boolean SLEEP = false;
 
     public static final String SORT_BY_KEY = "sort_by";
     public static final String SORT_DIR_KEY = "sort_dir";
